@@ -7,15 +7,20 @@ getgenv().SalvatoreBot = {
 local config = getgenv().SalvatoreBot
 local controller  
 
--- Identify the controller at the start
-for _, player in pairs(game.Players:GetPlayers()) do
-    if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
-        controller = player
-        break
+-- Funkció a controller azonosítására
+local function IdentifyController()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
+            controller = player
+            break
+        end
     end
 end
 
--- Chat message sending function for the new chat system
+-- Keresés a controller azonosításához kezdetben
+IdentifyController()
+
+-- Chat üzenet küldő függvény az új chat rendszerhez
 function Chat(msg)
     local textChatService = game:GetService("TextChatService")
     if textChatService:FindFirstChild("TextChannels") then
@@ -25,7 +30,7 @@ function Chat(msg)
     end
 end
 
--- Helper function to find player by partial name (case-insensitive)
+-- Segédfüggvény, hogy játékost találjunk részleges név alapján (kis-nagybetű érzéketlenül)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
     for _, player in pairs(game.Players:GetPlayers()) do
@@ -36,12 +41,12 @@ local function FindPlayerByName(partialName)
     return nil
 end
 
--- Function to safely get the humanoid
+-- Funkció a humanoid biztonságos megszerzésére
 local function GetHumanoid(character)
     return character and character:FindFirstChildOfClass("Humanoid")
 end
 
--- Bus Bring Command
+-- Bus Bring Parancs
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
 
@@ -124,7 +129,7 @@ local function BusBringFunction(targetPlayerName)
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
--- Bring Command
+-- Bring Parancs
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
@@ -143,7 +148,7 @@ getgenv().SalvatoreCommands = {
     bring = BringFunction,
 }
 
--- Command Execution
+-- Parancs végrehajtása
 function Command(player, msg)
     if not msg:find(config.Prefix) then
         return  
@@ -188,6 +193,13 @@ end)
 
 -- Monitor Character Respawn
 game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
-    -- Re-initialize any necessary variables or reset states here
-    Chat("Respawned, command identification test.")
+    Chat("You have respawned.")
+    -- Az új karakter azonosítása
+    IdentifyController()
+
+    -- Ellenőrizzük a parancsok futtatásához szükséges környezetet
+    if controller then
+        -- Ide visszaadhatunk bármilyen inicializálási logikát, ha szükséges
+        Chat("Controller has been re-identified.")
+    end
 end)
