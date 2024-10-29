@@ -102,13 +102,14 @@ local function BusBringFunction(targetPlayerName)
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
--- Bring Command
+-- Bring Command 
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 
     if controller and controller.Character then
-        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(0, 5, 0)
+        
+        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(3, 0, 0)  
         character:SetPrimaryPartCFrame(targetPosition)
     else
         Chat("Controller not found.")
@@ -138,9 +139,10 @@ function Command(player, msg)
             if commandName == "busbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             else
-                return
-                Chat("The Salvatore Bot has no target.")
+                getgenv().SalvatoreCommands[commandName]() 
             end
+        else
+            return
         end
     end
 end
