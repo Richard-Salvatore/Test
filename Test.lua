@@ -5,7 +5,17 @@ getgenv().SalvatoreBot = {
 }
 
 local config = getgenv().SalvatoreBot
-local controller  
+local controller
+
+-- Function to identify the controller at the start
+local function IdentifyController()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
+            controller = player
+            break
+        end
+    end
+end
 
 -- Chat message sending function for the new chat system
 function Chat(msg)
@@ -32,6 +42,14 @@ end
 local function WaitForCharacter(player)
     while not player.Character or not player.Character:FindFirstChild("Humanoid") do
         player.CharacterAdded:Wait()
+    end
+end
+
+-- Function to wait for a player's humanoid to be alive
+local function WaitForHumanoid(player)
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    while humanoid and humanoid.Health <= 0 do
+        humanoid.Died:Wait()
     end
 end
 
@@ -176,11 +194,7 @@ function Command(player, msg)
         -- Execute the command function if it exists
         local commandFunc = getgenv().SalvatoreCommands[commandName]
         if commandFunc then
-            if commandName == "busbring" then
-                commandFunc(targetPlayerName)
-            else
-                commandFunc() 
-            end
+            commandFunc(targetPlayerName)
         else
             Chat("Unknown command.")
         end
@@ -205,48 +219,28 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
--- Function to restart the entire script
+-- Function to restart the script upon player death
 local function RestartScript()
-    -- Re-initialize everything here
-    controller = nil
-    
-    -- Identify the controller again
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
-            controller = player
-            break
+    while true do
+        local localPlayer = game.Players.LocalPlayer
+        WaitForCharacter(localPlayer) -- Wait for the character to spawn
+        
+        -- Reinitialize everything after respawn
+        IdentifyController()
+        
+        -- Monitor humanoid for death
+        local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.Died:Connect(function()
+                Chat("You have died. Restarting script...")
+                wait(2) -- Optional delay before restart
+            end)
         end
-    end
-
-    -- Monitor Incoming Messages again
-    game:GetService("TextChatService").OnIncomingMessage = function(message)
-        local player = game:GetService("Players"):GetPlayerByUserId(message.TextSource.UserId)
-        local msg = message.Text
-
-        if player then
-            Command(player, msg)
-        end
-    end
-
-    -- Add additional necessary setups here
-end
-
--- Humanoid death event monitoring
-local function MonitorLocalPlayer()
-    local localPlayer = game.Players.LocalPlayer
-
-    -- Wait for local player's character
-    WaitForCharacter(localPlayer)
-
-    local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.Died:Connect(function()
-            -- Wait until character respawns
-            localPlayer.CharacterAdded:Wait()
-            RestartScript() -- Restart the script
-        end)
+        
+        -- Wait for character to respawn
+        localPlayer.CharacterAdded:Wait()
     end
 end
 
 -- Start monitoring the local player
-MonitorLocalPlayer()
+RestartScript()
