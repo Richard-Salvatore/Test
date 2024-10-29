@@ -1,6 +1,6 @@
 -- Configuration
 getgenv().SalvatoreBot = {
-    Controllers = { "7472556141", "SalvatoreLogBotV3" },
+    Controllers = { "7472556141", "SalvatoreLogBotV3" }, 
     Prefix = "!",
 }
 
@@ -36,31 +36,10 @@ local function FindPlayerByName(partialName)
     return nil
 end
 
--- Function to spawn a vehicle and attempt to sit the local player
-local function SpawnVehicle(vehicleType, seatPosition)
-    game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", vehicleType)
-    wait(1)
-    local playerCar = workspace.Vehicles[game.Players.LocalPlayer.Name .. "Car"]
-    if playerCar then
-        local seat = playerCar.Body:FindFirstChild("VehicleSeat")
-        if seat then
-            local attempts = 0
-            while not game.Players.LocalPlayer.Character.Humanoid.Sit and attempts < 10 do
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = seat.CFrame
-                wait(0.5)
-                attempts = attempts + 1
-            end
-        else
-            Chat("Vehicle seat not found.")
-        end
-    else
-        Chat("Could not spawn vehicle.")
-    end
-end
-
 -- Bus Bring Command
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
+
     if not targetPlayer then
         Chat("The specified player was not found.")
         return
@@ -80,44 +59,69 @@ local function BusBringFunction(targetPlayerName)
         return
     end
 
+    -- Teleport local player to bus seat location
     localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
     wait(1)
-    SpawnVehicle("SchoolBus")
+    
+    -- Spawn bus
+    game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
+    wait(1)
 
     local playerCar = workspace.Vehicles[localPlayer.Name .. "Car"]
     if playerCar then
-        local success, error = pcall(function()
-            local positions = { CFrame.new(0, -3, -3), CFrame.new(0, 0, -15), CFrame.new(0, -3, -3) }
-            local positionIndex = 1
-            while not targetHumanoid.Sit and targetPlayer.Character and targetHumanoid.Health > 0 do
-                local targetCFrame = targetHumanoid.RootPart.CFrame
-                playerCar:SetPrimaryPartCFrame(targetCFrame * positions[positionIndex])
-                positionIndex = (positionIndex % #positions) + 1
+        local seat = playerCar.Body.VehicleSeat
+        if seat then
+            -- Attempt to sit player in bus seat
+            local attempts = 0
+            while not localPlayer.Character.Humanoid.Sit and attempts < 10 do
+                localPlayer.Character.HumanoidRootPart.CFrame = seat.CFrame
                 wait(0.5)
+                attempts = attempts + 1
             end
-        end)
-        if not success then
-            Chat("Error while bringing the target.")
         end
     else
-        Chat("Error in locating player car.")
+        Chat("Could not spawn bus.")
+        return
     end
 
+    -- Teleport bus to target until they sit
+    local success, error = pcall(function()
+        local positions = { CFrame.new(0, -3, -3), CFrame.new(0, 0, -15), CFrame.new(0, -3, -3) }
+        local positionIndex = 1
+        while not targetHumanoid.Sit and targetPlayer.Character and targetHumanoid.Health > 0 do
+            local targetCFrame = targetHumanoid.RootPart.CFrame
+            playerCar:SetPrimaryPartCFrame(targetCFrame * positions[positionIndex])
+            positionIndex = (positionIndex % #positions) + 1
+            wait(0.5)
+        end
+    end)
+    if not success then
+        Chat("Error while bringing the target.")
+        return
+    end
+
+    -- Teleport the bus to controller
     if controller and controller.Character then
         local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
         playerCar:SetPrimaryPartCFrame(controllerPrimaryCFrame)
     end
     wait(1)
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer("DeleteAllVehicles")
+    local args = {
+        [1] = "DeleteAllVehicles"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
 -- Cart Bring Command
 local function CartBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
+
     if not targetPlayer then
         Chat("The specified player was not found.")
         return
     end
+
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
@@ -132,8 +136,18 @@ local function CartBringFunction(targetPlayerName)
         return
     end
 
+    local oldPos = localPlayer.Character.HumanoidRootPart.CFrame
+
+    -- Clear existing tools
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
     wait(1)
+
+    if not game.Players.LocalPlayer.Character then return end
+    local plr = game.Players.LocalPlayer.Character
+    plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+    plr.Humanoid.Sit = true
+
+    -- Spawn cart
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
 
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
@@ -144,24 +158,115 @@ local function CartBringFunction(targetPlayerName)
 
     -- Teleport cart to target until they sit
     local success, error = pcall(function()
+        local newPositionIndex = 1 
         local positions = {
             CFrame.new(0, 0, -20),
             CFrame.new(0, 0, 3),
             CFrame.new(0, 0, -15),
             CFrame.new(0, 0, 2)
         }
-        local positionIndex = 1
         while not targetHumanoidForCartBring.Sit and targetPlayer.Character and targetHumanoidForCartBring.Health > 0 do
             local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
-            localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * positions[positionIndex]
-            positionIndex = (positionIndex % #positions) + 1
-            game:GetService("RunService").Heartbeat:Wait()
+            local newPosition = positions[newPositionIndex]
+            newPositionIndex = newPositionIndex % #positions + 1 
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
+            game:GetService("RunService").Heartbeat:Wait()  
         end
     end)
     if not success then
         Chat("Error while bringing the target.")
+        return
     end
 
+    -- Wait until the target is seated
+    while not targetHumanoidForCartBring.Sit do
+        wait(0.5)
+    end
+
+    -- Teleport to controller
+    if controller and controller.Character then
+        local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+        wait(2)
+        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+        plr.Humanoid.Sit = false
+    end
+end
+
+
+-- Couch Bring Command
+local function CouchBringFunction(targetPlayerName)
+    local targetPlayerForCouchBring = FindPlayerByName(targetPlayerName)
+
+    if not targetPlayerForCouchBring then
+        Chat("The specified player was not found.")
+        return
+    end
+
+    local localPlayer = game.Players.LocalPlayer
+    local targetCharacter = targetPlayerForCouchBring.Character
+    local targetHumanoidForCouchBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+    if not targetCharacter or not targetHumanoidForCouchBring then
+        Chat("The target player's character is not available.")
+        return
+    end
+
+    if targetHumanoidForCouchBring.Sit then
+        Chat("The target is currently sitting; bring cannot be used.")
+        return
+    end
+
+    -- Clear existing tools
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    wait()
+
+    -- Disable seated state temporarily
+    if localPlayer.Character then
+        local plr = localPlayer.Character
+        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+        plr.Humanoid.Sit = true
+    end
+
+    -- Spawn couch
+    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
+    wait()
+
+    -- Ensure tools are properly equipped
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = localPlayer.Character 
+        end
+    end
+
+    -- Teleport couch to target until they sit
+    local newPositionIndex = 1 
+    local positions = {
+        CFrame.new(1, -3, -20),
+        CFrame.new(1, -3, 2),
+        CFrame.new(1, -3, -15),
+        CFrame.new(1, -3, 3)
+    }
+    local success, error = pcall(function()
+        while not targetHumanoidForCouchBring.Sit and targetPlayerForCouchBring.Character and targetHumanoidForCouchBring.Health > 0 do
+            local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
+            local newPosition = positions[newPositionIndex]
+            newPositionIndex = newPositionIndex % #positions + 1 
+            localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
+            game:GetService("RunService").Heartbeat:Wait()  
+        end
+    end)
+    if not success then
+        Chat("Error while bringing the target.")
+        return
+    end
+
+    -- Wait until the target is seated
+    while not targetHumanoidForCouchBring.Sit do
+        wait(0.5)
+    end
+
+    -- Teleport to controller
     if controller and controller.Character then
         local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
         localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
@@ -189,9 +294,7 @@ end
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
     cartbring = CartBringFunction,
-    couchbring = CouchBringFunction,
     bring = BringFunction,
-    
 }
 
 -- Command Execution
@@ -208,7 +311,7 @@ function Command(player, msg)
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" or commandName == "cartbring" == "couchbring" then
+            if commandName == "busbring" or commandName == "cartbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             else
                 getgenv().SalvatoreCommands[commandName]() 
