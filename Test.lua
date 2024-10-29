@@ -94,6 +94,12 @@ local function BusBringFunction(targetPlayerName)
         local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
         playerCar:SetPrimaryPartCFrame(controllerPrimaryCFrame)
     end
+    wait(1)
+    local args = {
+        [1] = "DeleteAllVehicles"
+    }
+    
+    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
 -- Bring Command
@@ -124,7 +130,6 @@ function Command(player, msg)
     local args = string.split(msg, " ")
     local commandName = string.lower(args[1]):gsub(config.Prefix, "")
 
-    -- Remove prefix from command and get the player name if necessary
     table.remove(args, 1)  
     local targetPlayerName = table.concat(args, "") 
 
@@ -133,10 +138,9 @@ function Command(player, msg)
             if commandName == "busbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             else
-                getgenv().SalvatoreCommands[commandName]()
+                return
+                Chat("The Salvatore Bot has no target.")
             end
-        else
-            Chat("Unknown command.")
         end
     end
 end
