@@ -178,6 +178,18 @@ local function CartBringFunction(targetPlayerName)
         return
     end
 
+    -- Wait until the target is seated
+    while not targetHumanoidForCartBring.Sit do
+        wait(0.5)
+    end
+
+    -- Teleport cart to controller
+    if controller and controller.Character then
+        local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+    end
+    
+    -- Return to original position
     localPlayer.Character.HumanoidRootPart.CFrame = oldPos
 end
 
