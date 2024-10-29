@@ -7,23 +7,27 @@ getgenv().SalvatoreBot = {
 local config = getgenv().SalvatoreBot
 local controller  
 
--- Funkció a controller azonosítására
-local function IdentifyController()
+-- Identify the controller at the start
+local function UpdateController()
     for _, player in pairs(game.Players:GetPlayers()) do
         if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
             controller = player
-            Chat("Controller identified: " .. player.Name)
-            return
+            break
         end
     end
-    Chat("Controller not found.")
-    controller = nil  -- Ha nem található, állítsuk nullára
 end
 
--- Keresés a controller azonosításához kezdetben
-IdentifyController()
+-- Call this function initially and whenever a player respawns
+UpdateController()
 
--- Chat üzenet küldő függvény az új chat rendszerhez
+-- Monitor CharacterAdded event for the controller
+if controller then
+    controller.CharacterAdded:Connect(function()
+        UpdateController()
+    end)
+end
+
+-- Chat message sending function for the new chat system
 function Chat(msg)
     local textChatService = game:GetService("TextChatService")
     if textChatService:FindFirstChild("TextChannels") then
@@ -33,7 +37,7 @@ function Chat(msg)
     end
 end
 
--- Segédfüggvény, hogy játékost találjunk részleges név alapján (kis-nagybetű érzéketlenül)
+-- Helper function to find player by partial name (case-insensitive)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
     for _, player in pairs(game.Players:GetPlayers()) do
@@ -44,12 +48,7 @@ local function FindPlayerByName(partialName)
     return nil
 end
 
--- Funkció a humanoid biztonságos megszerzésére
-local function GetHumanoid(character)
-    return character and character:FindFirstChildOfClass("Humanoid")
-end
-
--- Bus Bring Parancs
+-- Bus Bring Command
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
 
@@ -60,7 +59,7 @@ local function BusBringFunction(targetPlayerName)
 
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
-    local targetHumanoid = GetHumanoid(targetCharacter)
+    local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoid then
         Chat("The target player's character is not available.")
@@ -73,13 +72,8 @@ local function BusBringFunction(targetPlayerName)
     end
 
     -- Teleport local player to bus seat location
-    local success, err = pcall(function()
-        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
-    end)
-    if not success then
-        Chat("Failed to teleport: " .. tostring(err))
-        return
-    end
+    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
+    wait(1)
     
     -- Spawn bus
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
@@ -102,11 +96,11 @@ local function BusBringFunction(targetPlayerName)
         return
     end
 
-    -- Teleport bus to target until they sit
+    -- Teleport the bus to target until they sit
     local success, error = pcall(function()
         local positions = { CFrame.new(0, -3, -3), CFrame.new(0, 0, -15), CFrame.new(0, -3, -3) }
         local positionIndex = 1
-        while not targetHumanoid.Sit and targetPlayer.Character and GetHumanoid(targetPlayer.Character).Health > 0 do
+        while not targetHumanoid.Sit and targetPlayer.Character and targetHumanoid.Health > 0 do
             local targetCFrame = targetHumanoid.RootPart.CFrame
             playerCar:SetPrimaryPartCFrame(targetCFrame * positions[positionIndex])
             positionIndex = (positionIndex % #positions) + 1
@@ -114,7 +108,7 @@ local function BusBringFunction(targetPlayerName)
         end
     end)
     if not success then
-        Chat("Error while bringing the target: " .. tostring(error))
+        Chat("Error while bringing the target.")
         return
     end
 
@@ -124,23 +118,24 @@ local function BusBringFunction(targetPlayerName)
         playerCar:SetPrimaryPartCFrame(controllerPrimaryCFrame)
     end
     wait(1)
-    
-    -- Deleting vehicles
     local args = {
         [1] = "DeleteAllVehicles"
     }
+    
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
--- Bring Parancs
+-- Bring Command
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 
+    -- Recheck the controller
+    UpdateController()
+
     if controller and controller.Character then
         local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
         character:SetPrimaryPartCFrame(targetPosition)
-        Chat("Brought to controller's position.")
     else
         Chat("Controller not found.")
     end
@@ -152,7 +147,7 @@ getgenv().SalvatoreCommands = {
     bring = BringFunction,
 }
 
--- Parancs végrehajtása
+-- Command Execution
 function Command(player, msg)
     if not msg:find(config.Prefix) then
         return  
@@ -160,9 +155,11 @@ function Command(player, msg)
 
     local args = string.split(msg, " ")
     local commandName = string.lower(args[1]):gsub(config.Prefix, "")
-
     table.remove(args, 1)  
     local targetPlayerName = table.concat(args, "")
+
+    -- Recheck the controller
+    UpdateController()
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
@@ -174,8 +171,6 @@ function Command(player, msg)
         else
             Chat("Unknown command.")
         end
-    else
-        Chat("You don't have permission to run this command.")
     end
 end
 
@@ -195,28 +190,4 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
     wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-end)
-
--- Monitor Character Respawn
-game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
-    Chat("You have respawned.")
-    
-    -- Az új karakter azonosítása
-    IdentifyController() -- A controllert újra kell azonosítani
-    
-    -- Debug: Ellenőrizzük, hogy a karakter és a kontroller elérhető-e
-    if controller then
-        if controller.Character then
-            Chat("Controller has been re-identified: " .. controller.Name)
-        else
-            Chat("Controller not available after respawn.")
-        end
-    else
-        Chat("No controller available after respawn.")
-    end
-end)
-
--- Ellenőrizzük a játékos állapotát (halál, respawn)
-game.Players.LocalPlayer.CharacterRemoving:Connect(function(character)
-    Chat("Character is being removed, possibly due to death.")
 end)
