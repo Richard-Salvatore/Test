@@ -1,5 +1,3 @@
-while true do
-wait()
 -- Configuration
 getgenv().SalvatoreBot = {
     Controllers = { "7472556141", "SalvatoreLogBotV3" }, 
@@ -117,7 +115,7 @@ local function BusBringFunction(targetPlayerName)
         end
     end)
     if not success then
-        Chat("Error while bringing the target.")
+        Chat("Error while bringing the target: " .. tostring(error))
         return
     end
 
@@ -224,18 +222,20 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
--- Function to restart script when player respawns
+-- Function to handle player respawn
 local function OnPlayerRespawn()
     local localPlayer = game.Players.LocalPlayer
-    local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.Died:Connect(function()
-            -- Wait until character respawns
-            local characterAdded = localPlayer.CharacterAdded:Wait()
-            WaitForCharacter(localPlayer)
-            -- After respawn, ensure humanoid is alive
-            WaitForHumanoid(localPlayer)
-        end)
+    if localPlayer.Character then
+        local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            humanoid.Died:Connect(function()
+                -- Wait until character respawns
+                local characterAdded = localPlayer.CharacterAdded:Wait()
+                WaitForCharacter(localPlayer)
+                -- After respawn, ensure humanoid is alive
+                WaitForHumanoid(localPlayer)
+            end)
+        end
     end
 end
 
@@ -243,20 +243,20 @@ end
 local function MonitorLocalPlayer()
     local localPlayer = game.Players.LocalPlayer
     while true do
-        if not localPlayer.Character then
-            -- Wait until the player character is added
-            localPlayer.CharacterAdded:Wait()
-            WaitForCharacter(localPlayer)
-            -- Re-initialize script components if needed
-            OnPlayerRespawn() -- Ensure we also handle humanoid death on respawn
-        else
-            -- Monitor humanoid for death
-            OnPlayerRespawn()
-        end
+        -- Use pcall to handle potential errors
+        pcall(function()
+            if not localPlayer.Character then
+                -- Wait until the player character is added
+                localPlayer.CharacterAdded:Wait()
+                WaitForCharacter(localPlayer)
+            else
+                -- Monitor humanoid for death
+                OnPlayerRespawn()
+            end
+        end)
         wait(1) -- Check every second
     end
 end
 
 -- Start monitoring the local player
 MonitorLocalPlayer()
-end
