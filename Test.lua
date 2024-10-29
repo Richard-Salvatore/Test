@@ -166,11 +166,13 @@ function Command(player, msg)
     local targetPlayerName = table.concat(args, "")
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
-        if getgenv().SalvatoreCommands[commandName] then
+        -- Execute the command function if it exists
+        local commandFunc = getgenv().SalvatoreCommands[commandName]
+        if commandFunc then
             if commandName == "busbring" then
-                getgenv().SalvatoreCommands[commandName](targetPlayerName)
+                commandFunc(targetPlayerName)
             else
-                getgenv().SalvatoreCommands[commandName]() 
+                commandFunc() 
             end
         else
             Chat("Unknown command.")
