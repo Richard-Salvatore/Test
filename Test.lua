@@ -17,6 +17,7 @@ local function IdentifyController()
         end
     end
     Chat("Controller not found.")
+    controller = nil  -- Ha nem található, állítsuk nullára
 end
 
 -- Keresés a controller azonosításához kezdetben
@@ -199,17 +200,23 @@ end)
 -- Monitor Character Respawn
 game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
     Chat("You have respawned.")
+    
     -- Az új karakter azonosítása
     IdentifyController() -- A controllert újra kell azonosítani
     
     -- Debug: Ellenőrizzük, hogy a karakter és a kontroller elérhető-e
     if controller then
         if controller.Character then
-            Chat("Controller has been re-identified.")
+            Chat("Controller has been re-identified: " .. controller.Name)
         else
             Chat("Controller not available after respawn.")
         end
     else
         Chat("No controller available after respawn.")
     end
+end)
+
+-- Ellenőrizzük a játékos állapotát (halál, respawn)
+game.Players.LocalPlayer.CharacterRemoving:Connect(function(character)
+    Chat("Character is being removed, possibly due to death.")
 end)
