@@ -12,9 +12,11 @@ local function IdentifyController()
     for _, player in pairs(game.Players:GetPlayers()) do
         if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
             controller = player
-            break
+            Chat("Controller identified: " .. player.Name)
+            return
         end
     end
+    Chat("Controller not found.")
 end
 
 -- Keresés a controller azonosításához kezdetben
@@ -137,6 +139,7 @@ local function BringFunction()
     if controller and controller.Character then
         local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
         character:SetPrimaryPartCFrame(targetPosition)
+        Chat("Brought to controller's position.")
     else
         Chat("Controller not found.")
     end
@@ -170,6 +173,8 @@ function Command(player, msg)
         else
             Chat("Unknown command.")
         end
+    else
+        Chat("You don't have permission to run this command.")
     end
 end
 
@@ -196,17 +201,16 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
     Chat("You have respawned.")
     -- Az új karakter azonosítása
     IdentifyController()
-
-    -- Parancsok futtatásának engedélyezése
+    
+    -- Debug: Ellenőrizzük, hogy a karakter és a kontroller elérhető-e
     if controller then
-        local player = game.Players.LocalPlayer
-        -- Ellenőrizzük, hogy a controller éppen elérhető-e
         if controller.Character then
-            -- Frissítsük a parancsok környezetét
             Chat("Controller has been re-identified.")
         else
-            Chat("Controller not available.")
+            Chat("Controller not available after respawn.")
         end
+    else
+        Chat("No controller available after respawn.")
     end
 end)
 
