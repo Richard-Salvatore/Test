@@ -7,9 +7,6 @@ getgenv().SalvatoreBot = {
 local config = getgenv().SalvatoreBot
 local controller  
 
-
-
-
 -- Identify the controller at the start
 for _, player in pairs(game.Players:GetPlayers()) do
     if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
@@ -17,25 +14,6 @@ for _, player in pairs(game.Players:GetPlayers()) do
         break
     end
 end
-
-
--- Function to update the controller reference
-local function UpdateController()
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
-            controller = player
-            return
-        end
-    end
-    controller = nil -- If not found, reset the controller
-end
-
--- Call UpdateController periodically
-while true do
-    UpdateController()
-    wait(5) -- Adjust the wait time as necessary
-end
-
 
 -- Chat message sending function for the new chat system
 function Chat(msg)
@@ -154,6 +132,7 @@ getgenv().SalvatoreCommands = {
     bring = BringFunction,
 }
 
+-- Command Execution
 function Command(player, msg)
     if not msg:find(config.Prefix) then
         return  
@@ -165,7 +144,7 @@ function Command(player, msg)
     table.remove(args, 1)  
     local targetPlayerName = table.concat(args, "")
 
-    if (controller and (table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name))) then
+    if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
             if commandName == "busbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
@@ -175,11 +154,8 @@ function Command(player, msg)
         else
             Chat("Unknown command.")
         end
-    else
-        Chat("Controller not found or you do not have permission.")
     end
 end
-
 
 -- Monitor Incoming Messages
 game:GetService("TextChatService").OnIncomingMessage = function(message)
