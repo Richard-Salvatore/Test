@@ -1,3 +1,6 @@
+
+local success, result = pcall(function()
+
 -- Configuration
 getgenv().SalvatoreBot = {
     Controllers = { "7472556141", "SalvatoreLogBotV3" }, 
@@ -260,3 +263,7 @@ end
 
 -- Start monitoring the local player
 MonitorLocalPlayer()
+    end)
+if success then
+else
+end
