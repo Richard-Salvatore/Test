@@ -183,14 +183,11 @@ local function CartBringFunction(targetPlayerName)
         wait(0.5)
     end
 
-    -- Teleport cart to controller
+    -- Teleport to controller
     if controller and controller.Character then
         local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
         localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
     end
-    
-    -- Return to original position
-    localPlayer.Character.HumanoidRootPart.CFrame = oldPos
 end
 
 -- Bring Command
