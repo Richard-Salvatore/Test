@@ -141,7 +141,7 @@ local function BringFunction()
     local character = localPlayer.Character
 
     if controller and controller.Character then
-        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(6, 0, 0)
+        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
         character:SetPrimaryPartCFrame(targetPosition)
     else
         Chat("Controller not found.")
