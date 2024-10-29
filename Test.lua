@@ -5,15 +5,13 @@ getgenv().SalvatoreBot = {
 }
 
 local config = getgenv().SalvatoreBot
-local controller
+local controller  
 
--- Function to identify the controller at the start
-local function IdentifyController()
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
-            controller = player
-            break
-        end
+-- Identify the controller at the start
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
+        controller = player
+        break
     end
 end
 
@@ -27,47 +25,34 @@ function Chat(msg)
     end
 end
 
--- Helper function to find player by partial name or display name (case-insensitive)
+-- Helper function to find player by partial name (case-insensitive)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
     for _, player in pairs(game.Players:GetPlayers()) do
-        if string.find(string.lower(player.Name), lowerPartialName) or string.find(string.lower(player.DisplayName), lowerPartialName) then
+        if string.find(string.lower(player.Name), lowerPartialName) then
             return player
         end
     end
     return nil
 end
 
--- Function to wait for a player's character to spawn
-local function WaitForCharacter(player)
-    while not player.Character or not player.Character:FindFirstChild("Humanoid") do
-        player.CharacterAdded:Wait()
-    end
-end
-
--- Function to wait for a player's humanoid to be alive
-local function WaitForHumanoid(player)
-    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-    while humanoid and humanoid.Health <= 0 do
-        humanoid.Died:Wait()
-    end
+-- Function to safely get the humanoid
+local function GetHumanoid(character)
+    return character and character:FindFirstChildOfClass("Humanoid")
 end
 
 -- Bus Bring Command
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
+
     if not targetPlayer then
         Chat("The specified player was not found.")
         return
     end
 
     local localPlayer = game.Players.LocalPlayer
-
-    -- Wait for target's character
-    WaitForCharacter(targetPlayer)
-
     local targetCharacter = targetPlayer.Character
-    local targetHumanoid = targetCharacter:FindFirstChildOfClass("Humanoid")
+    local targetHumanoid = GetHumanoid(targetCharacter)
 
     if not targetCharacter or not targetHumanoid then
         Chat("The target player's character is not available.")
@@ -80,8 +65,13 @@ local function BusBringFunction(targetPlayerName)
     end
 
     -- Teleport local player to bus seat location
-    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
-    wait(1)
+    local success, err = pcall(function()
+        localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
+    end)
+    if not success then
+        Chat("Failed to teleport: " .. tostring(err))
+        return
+    end
     
     -- Spawn bus
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
@@ -108,7 +98,7 @@ local function BusBringFunction(targetPlayerName)
     local success, error = pcall(function()
         local positions = { CFrame.new(0, -3, -3), CFrame.new(0, 0, -15), CFrame.new(0, -3, -3) }
         local positionIndex = 1
-        while not targetHumanoid.Sit and targetPlayer.Character and targetHumanoid.Health > 0 do
+        while not targetHumanoid.Sit and targetPlayer.Character and GetHumanoid(targetPlayer.Character).Health > 0 do
             local targetCFrame = targetHumanoid.RootPart.CFrame
             playerCar:SetPrimaryPartCFrame(targetCFrame * positions[positionIndex])
             positionIndex = (positionIndex % #positions) + 1
@@ -116,7 +106,7 @@ local function BusBringFunction(targetPlayerName)
         end
     end)
     if not success then
-        Chat("Error while bringing the target.")
+        Chat("Error while bringing the target: " .. tostring(error))
         return
     end
 
@@ -126,47 +116,24 @@ local function BusBringFunction(targetPlayerName)
         playerCar:SetPrimaryPartCFrame(controllerPrimaryCFrame)
     end
     wait(1)
+    
+    -- Deleting vehicles
     local args = {
         [1] = "DeleteAllVehicles"
     }
-    
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
 -- Bring Command
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
-
-    -- Wait for local player's character
-    WaitForCharacter(localPlayer)
-
-    local character = localPlayer.Character
+    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 
     if controller and controller.Character then
-        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(6, 0, 0)
+        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
         character:SetPrimaryPartCFrame(targetPosition)
     else
         Chat("Controller not found.")
-    end
-end
-
--- Reset Command (by destroying head)
-local function ResetFunction()
-    local localPlayer = game.Players.LocalPlayer
-    if localPlayer.Character then
-        local head = localPlayer.Character:FindFirstChild("Head")
-        if head then
-            head:Destroy()
-        end
-    end
-end
-
--- Reset2 Command (by setting humanoid health to 0)
-local function Reset2Function()
-    local localPlayer = game.Players.LocalPlayer
-    local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.Health = 0
     end
 end
 
@@ -174,8 +141,6 @@ end
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
     bring = BringFunction,
-    reset = ResetFunction,
-    reset2 = Reset2Function,
 }
 
 -- Command Execution
@@ -191,10 +156,12 @@ function Command(player, msg)
     local targetPlayerName = table.concat(args, "")
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
-        -- Execute the command function if it exists
-        local commandFunc = getgenv().SalvatoreCommands[commandName]
-        if commandFunc then
-            commandFunc(targetPlayerName)
+        if getgenv().SalvatoreCommands[commandName] then
+            if commandName == "busbring" then
+                getgenv().SalvatoreCommands[commandName](targetPlayerName)
+            else
+                getgenv().SalvatoreCommands[commandName]() 
+            end
         else
             Chat("Unknown command.")
         end
@@ -219,28 +186,8 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
 
--- Function to restart the script upon player death
-local function RestartScript()
-    while true do
-        local localPlayer = game.Players.LocalPlayer
-        WaitForCharacter(localPlayer) -- Wait for the character to spawn
-        
-        -- Reinitialize everything after respawn
-        IdentifyController()
-        
-        -- Monitor humanoid for death
-        local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.Died:Connect(function()
-                Chat("You have died. Restarting script...")
-                wait(2) -- Optional delay before restart
-            end)
-        end
-        
-        -- Wait for character to respawn
-        localPlayer.CharacterAdded:Wait()
-    end
-end
-
--- Start monitoring the local player
-RestartScript()
+-- Monitor Character Respawn
+game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
+    -- Re-initialize any necessary variables or reset states here
+    Chat("Respawned, command identification test.")
+end)
