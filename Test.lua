@@ -29,7 +29,6 @@ end
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
     for _, player in pairs(game.Players:GetPlayers()) do
-        -- Check both the Username and the DisplayName for a partial match
         if string.find(string.lower(player.Name), lowerPartialName) or string.find(string.lower(player.DisplayName), lowerPartialName) then
             return player
         end
@@ -40,7 +39,6 @@ end
 -- Bus Bring Command
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
-
     if not targetPlayer then
         Chat("The specified player was not found.")
         return
@@ -127,10 +125,32 @@ local function BringFunction()
     end
 end
 
+-- Reset Command (by destroying head)
+local function ResetFunction()
+    local localPlayer = game.Players.LocalPlayer
+    if localPlayer.Character then
+        local head = localPlayer.Character:FindFirstChild("Head")
+        if head then
+            head:Destroy()
+        end
+    end
+end
+
+-- Reset2 Command (by setting humanoid health to 0)
+local function Reset2Function()
+    local localPlayer = game.Players.LocalPlayer
+    local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = 0
+    end
+end
+
 -- List of Commands
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
     bring = BringFunction,
+    reset = ResetFunction,
+    reset2 = Reset2Function,
 }
 
 -- Command Execution
