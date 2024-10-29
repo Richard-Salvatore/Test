@@ -113,6 +113,74 @@ local function BusBringFunction(targetPlayerName)
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
+-- Cart Bring Command
+local function CartBringFunction(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
+
+    if not targetPlayer then
+        Chat("The specified player was not found.")
+        return
+    end
+
+    local localPlayer = game.Players.LocalPlayer
+    local targetCharacter = targetPlayer.Character
+    local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+    if not targetCharacter or not targetHumanoidForCartBring then
+        Chat("The target player's character is not available.")
+        return
+    end
+
+    if targetHumanoidForCartBring.Sit then
+        Chat("The target is currently sitting; bring cannot be used.")
+        return
+    end
+
+    local oldPos = localPlayer.Character.HumanoidRootPart.CFrame
+
+    -- Clear existing tools
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    wait(1)
+
+    if not game.Players.LocalPlayer.Character then return end
+    local plr = game.Players.LocalPlayer.Character
+    plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+    plr.Humanoid.Sit = true
+
+    -- Spawn cart
+    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
+
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = localPlayer.Character 
+        end
+    end
+
+    -- Teleport cart to target until they sit
+    local success, error = pcall(function()
+        local newPositionIndex = 1 
+        local positions = {
+            CFrame.new(0, 0, -20),
+            CFrame.new(0, 0, 3),
+            CFrame.new(0, 0, -15),
+            CFrame.new(0, 0, 2)
+        }
+        while not targetHumanoidForCartBring.Sit and targetPlayer.Character and targetHumanoidForCartBring.Health > 0 do
+            local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
+            local newPosition = positions[newPositionIndex]
+            newPositionIndex = newPositionIndex % #positions + 1 
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
+            game:GetService("RunService").Heartbeat:Wait()  
+        end
+    end)
+    if not success then
+        Chat("Error while bringing the target.")
+        return
+    end
+
+    localPlayer.Character.HumanoidRootPart.CFrame = oldPos
+end
+
 -- Bring Command
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
@@ -129,6 +197,7 @@ end
 -- List of Commands
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
+    cartbring = CartBringFunction,
     bring = BringFunction,
 }
 
@@ -142,11 +211,11 @@ function Command(player, msg)
     local commandName = string.lower(args[1]):gsub(config.Prefix, "")
 
     table.remove(args, 1)  
-    local targetPlayerName = table.concat(args, "")
+    local targetPlayerName = table.concat(args, " ")
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" then
+            if commandName == "busbring" or commandName == "cartbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             else
                 getgenv().SalvatoreCommands[commandName]() 
