@@ -36,6 +36,13 @@ local function FindPlayerByName(partialName)
     return nil
 end
 
+-- Function to wait for a player's character to spawn
+local function WaitForCharacter(player)
+    while not player.Character or not player.Character:FindFirstChild("Humanoid") do
+        player.CharacterAdded:Wait()
+    end
+end
+
 -- Bus Bring Command
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
@@ -45,8 +52,12 @@ local function BusBringFunction(targetPlayerName)
     end
 
     local localPlayer = game.Players.LocalPlayer
+
+    -- Wait for target's character
+    WaitForCharacter(targetPlayer)
+
     local targetCharacter = targetPlayer.Character
-    local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    local targetHumanoid = targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoid then
         Chat("The target player's character is not available.")
@@ -115,7 +126,11 @@ end
 -- Bring Command
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
-    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+
+    -- Wait for local player's character
+    WaitForCharacter(localPlayer)
+
+    local character = localPlayer.Character
 
     if controller and controller.Character then
         local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(6, 0, 0)
@@ -197,3 +212,23 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
+
+-- Humanoid death event monitoring
+local localPlayer = game.Players.LocalPlayer
+local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+
+if humanoid then
+    humanoid.Died:Connect(function()
+        WaitForCharacter(localPlayer)
+    end)
+end
+
+-- Controller death event monitoring
+if controller then
+    local controllerHumanoid = controller.Character and controller.Character:FindFirstChildOfClass("Humanoid")
+    if controllerHumanoid then
+        controllerHumanoid.Died:Connect(function()
+            WaitForCharacter(controller)
+        end)
+    end
+end
