@@ -294,6 +294,7 @@ end
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
     cartbring = CartBringFunction,
+    couchbring = CouchBringFunction,
     bring = BringFunction,
 }
 
@@ -311,7 +312,7 @@ function Command(player, msg)
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" or commandName == "cartbring" then
+            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             else
                 getgenv().SalvatoreCommands[commandName]() 
