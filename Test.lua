@@ -187,9 +187,8 @@ local function CartBringFunction(targetPlayerName)
     if controller and controller.Character then
         local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
         localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        -- Clear existing tools
+        wait(2)
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-        wait(1)
         plr.Humanoid.Sit = false
     end
 end
