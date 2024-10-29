@@ -171,7 +171,6 @@ local function CartBringFunction(targetPlayerName)
     end
 end
 
--- Bring Command Function, Command Handling, Anti-Idle Logic, etc., would remain largely the same
 
 -- Bring Command
 local function BringFunction()
