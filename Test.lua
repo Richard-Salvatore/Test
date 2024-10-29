@@ -25,11 +25,12 @@ function Chat(msg)
     end
 end
 
--- Helper function to find player by partial name (case-insensitive)
+-- Helper function to find player by partial name or display name (case-insensitive)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
     for _, player in pairs(game.Players:GetPlayers()) do
-        if string.find(string.lower(player.Name), lowerPartialName) then
+        -- Check both the Username and the DisplayName for a partial match
+        if string.find(string.lower(player.Name), lowerPartialName) or string.find(string.lower(player.DisplayName), lowerPartialName) then
             return player
         end
     end
