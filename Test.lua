@@ -200,7 +200,7 @@ end)
 game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
     Chat("You have respawned.")
     -- Az új karakter azonosítása
-    IdentifyController()
+    IdentifyController() -- A controllert újra kell azonosítani
     
     -- Debug: Ellenőrizzük, hogy a karakter és a kontroller elérhető-e
     if controller then
@@ -212,10 +212,4 @@ game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
     else
         Chat("No controller available after respawn.")
     end
-end)
-
--- Esetleg a parancsok újra engedélyezése a játékos respawnja után
-game.Players.LocalPlayer.CharacterAdded:Connect(function(character)
-    Chat("You have respawned. Reinitializing commands.")
-    IdentifyController() -- A controllert újra kell azonosítani
 end)
