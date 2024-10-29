@@ -48,6 +48,7 @@ local function WaitForHumanoid(player)
     local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
     while humanoid and humanoid.Health <= 0 do
         humanoid.Died:Wait()
+        WaitForCharacter(player)  -- Wait for character to respawn
     end
 end
 
@@ -230,7 +231,8 @@ local function OnPlayerRespawn()
             -- Wait until character respawns
             local characterAdded = localPlayer.CharacterAdded:Wait()
             WaitForCharacter(localPlayer)
-            -- Re-execute the script or any necessary initializations here if needed
+            -- After respawn, ensure humanoid is alive
+            WaitForHumanoid(localPlayer)
         end)
     end
 end
