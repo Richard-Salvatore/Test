@@ -124,6 +124,7 @@ function Command(player, msg)
     local args = string.split(msg, " ")
     local commandName = string.lower(args[1]):gsub(config.Prefix, "")
 
+    -- Remove prefix from command and get the player name if necessary
     table.remove(args, 1)  
     local targetPlayerName = table.concat(args, "") 
 
@@ -132,9 +133,10 @@ function Command(player, msg)
             if commandName == "busbring" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             else
-                return
-                Chat("The Salvatore Bot has no target.")
+                getgenv().SalvatoreCommands[commandName]()
             end
+        else
+            Chat("Unknown command.")
         end
     end
 end
