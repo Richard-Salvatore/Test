@@ -25,9 +25,20 @@ function Chat(msg)
     end
 end
 
+-- Helper function to find player by partial name (case-insensitive)
+local function FindPlayerByName(partialName)
+    local lowerPartialName = string.lower(partialName)
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if string.find(string.lower(player.Name), lowerPartialName) then
+            return player
+        end
+    end
+    return nil
+end
+
 -- Bus Bring Command
 local function BusBringFunction(targetPlayerName)
-    local targetPlayer = game:GetService("Players"):FindFirstChild(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
 
     if not targetPlayer then
         Chat("The specified player was not found.")
@@ -102,14 +113,13 @@ local function BusBringFunction(targetPlayerName)
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
--- Bring Command 
+-- Bring Command
 local function BringFunction()
     local localPlayer = game.Players.LocalPlayer
     local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 
     if controller and controller.Character then
-        
-        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(3, 0, 0)  
+        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(3, 0, 0)
         character:SetPrimaryPartCFrame(targetPosition)
     else
         Chat("Controller not found.")
@@ -132,7 +142,7 @@ function Command(player, msg)
     local commandName = string.lower(args[1]):gsub(config.Prefix, "")
 
     table.remove(args, 1)  
-    local targetPlayerName = table.concat(args, "") 
+    local targetPlayerName = table.concat(args, "")
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
@@ -142,7 +152,7 @@ function Command(player, msg)
                 getgenv().SalvatoreCommands[commandName]() 
             end
         else
-            return
+            Chat("Unknown command.")
         end
     end
 end
