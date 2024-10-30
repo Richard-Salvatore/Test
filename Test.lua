@@ -610,11 +610,16 @@ local function JoinDateFunction(targetPlayerName)
 
     local joinTime = os.time() - (targetPlayer.AccountAge * 86400)
     local joinDate = os.date("!*t", joinTime)
-    local joinDateString = string.format("The Salvatore bot has identified that the selected target %s joined on %d-%02d-%02d", 
+    
+    local joinDateString = string.format("The Salvatore bot has identified that the selected target %s joined on %d-%d-%d", 
                                          targetPlayer.Name, joinDate.year, joinDate.month, joinDate.day)
 
-    Chat(joinDateString)
+   
+    local filteredJoinDateString = joinDateString:gsub("joined", "joined -"):gsub("-", "–")
+
+    Chat(filteredJoinDateString)
 end
+
 
 
 
