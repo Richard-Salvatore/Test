@@ -466,6 +466,95 @@ local function CartKillFunction(targetPlayerName)
 end
 
 
+--Couch Kill Command
+local function CouchKillFunction(targetPlayerName)
+    local targetPlayerForCouchKill = FindPlayerByName(targetPlayerName)
+    
+    if not targetPlayerForCouchKill then
+        Chat("The Salvatore bot could not identify the selected target.")
+        return
+    end
+
+    local targetCharacter = targetPlayerForCouchKill.Character
+    local targetHumanoidForCouchKill = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+    if not targetCharacter or not targetHumanoidForCouchKill then
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
+        return
+    end
+
+    if targetHumanoidForCouchKill.Sit then
+        Chat("The Salvatore bot has detected that the selected target is sitting; the couchkill cannot be executed.")
+        return
+    end
+
+    
+    for _, descendant in ipairs(targetCharacter:GetDescendants()) do
+        if descendant:IsA("MeshPart") or descendant:IsA("Part") then
+            descendant.CanCollide = false
+        end
+    end
+
+    
+    local ohString1 = "ClearAllTools"
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
+    wait()
+
+    if not game.Players.LocalPlayer.Character then return end
+    local localPlayer = game.Players.LocalPlayer
+    local localCharacter = localPlayer.Character
+    localCharacter.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+    localCharacter.Humanoid.Sit = true
+
+    
+    local ohString1 = "PickingTools"
+    local ohString2 = "Couch"
+    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer(ohString1, ohString2)
+    wait()
+
+    
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = localCharacter
+        end
+    end
+
+    
+    if targetHumanoidForCouchKill then
+        local newPositionIndex = 1
+        local positions = {
+            CFrame.new(1, -3, -20),
+            CFrame.new(1, -3, 2),
+            CFrame.new(1, -3, -15),
+            CFrame.new(1, -3, 3)
+        }
+        
+        local success, error = pcall(function()
+            while not targetHumanoidForCouchKill.Sit and targetHumanoidForCouchKill.Health > 0 do
+                local targetCFrame = targetHumanoidForCouchKill.RootPart.CFrame
+                local newPosition = positions[newPositionIndex]
+                newPositionIndex = (newPositionIndex % #positions) + 1
+                localCharacter.HumanoidRootPart.CFrame = targetCFrame * newPosition
+                game:GetService("RunService").Heartbeat:Wait()
+            end
+        end)
+        
+        if not success then
+            Chat("The Salvatore bot detected an error while killing the selected target.")
+            return
+        end
+
+        localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212, -0.994122028, -0.00251204451, -0.108236156, -7.31211669e-09, 0.999730766, -0.0232026074, 0.108265303, -0.0230662227, -0.993854403)
+        
+        local controller = game.Players:FindFirstChild("ControllerName")  
+        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
+            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
+            localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+        else
+        end
+    end
+end
+
 
 
 --Bring Command
@@ -507,6 +596,7 @@ getgenv().SalvatoreCommands = {
     couchbring = CouchBringFunction,
     buskill = BusKillFunction,
     cartkill = CartKillFunction,
+    couchkill = CouchKillFunction,
     bring = BringFunction,
     reset = ResetFunction,
     msg = MessageFunction,
@@ -529,7 +619,7 @@ function Command(player, msg)
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" then
+            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" or "couchkill" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             elseif commandName == "msg" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName) 
