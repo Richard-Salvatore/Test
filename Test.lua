@@ -36,17 +36,6 @@ end
 
 
 
---Automated Chat Messages
-Chat("The Salvatore bot is online. ID: RPM-1769-Delta")
-wait(1)
-Chat("System initialisation in progress...")
-wait(1)
-Chat("All systems online. Check ready.")
-wait(1)
-Chat("Waiting for further instructions.")
-
-
-
 --Helper Function To Find Player By Partial Name (Case-Insensitive)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
@@ -600,40 +589,6 @@ end
 
 
 
---Date Command
-local function DateFunction()
-    local currentDate = os.date("*t") 
-    local dateMessage = string.format("Today's date is %04d-%02d-%02d, %02d:%02d:%02d", 
-        currentDate.year, currentDate.month, currentDate.day,
-        currentDate.hour, currentDate.min, currentDate.sec)
-    Chat(dateMessage)
-end
-
-
-
---Join Date Command
-local function JoinDateFunction(targetPlayerName)
-    local targetPlayer = FindPlayerByName(targetPlayerName)
-    if not targetPlayer then
-        Chat("The Salvatore bot could not identify the selected target.")
-        return
-    end
-
-    local joinTime = os.time() - (targetPlayer.AccountAge * 86400)
-    local joinDate = os.date("!*t", joinTime)
-    
-    local joinDateString = string.format("The Salvatore bot has identified that the selected target %s joined on %d-%d-%d", 
-                                         targetPlayer.Name, joinDate.year, joinDate.month, joinDate.day)
-
-   
-    local filteredJoinDateString = joinDateString:gsub("joined", "joined -"):gsub("-", "–")
-
-    Chat(filteredJoinDateString)
-end
-
-
-
-
 --List Of Commands
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
@@ -642,10 +597,8 @@ getgenv().SalvatoreCommands = {
     buskill = BusKillFunction,
     cartkill = CartKillFunction,
     couchkill = CouchKillFunction,
-    joindate = JoinDateFunction,
     bring = BringFunction,
     reset = ResetFunction,
-    date = DateFunction,
     msg = MessageFunction,
 }
 
@@ -666,7 +619,7 @@ function Command(player, msg)
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" or "couchkill" or "joindate" then
+            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" or "couchkill" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             elseif commandName == "msg" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName) 
