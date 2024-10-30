@@ -380,8 +380,6 @@ local function BusKillFunction(targetPlayerName)
         }
         
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
-
-    
     else
     end
 end
