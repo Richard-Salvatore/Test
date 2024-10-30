@@ -321,6 +321,8 @@ local function BusKillFunction(targetPlayerName)
         return
     end
 
+    workspace.FallenPartsDestroyHeight = 0 / 0
+    
     
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
@@ -408,6 +410,8 @@ local function CartKillFunction(targetPlayerName)
         return
     end
 
+    workspace.FallenPartsDestroyHeight = 0 / 0
+    
     
     local ohString1 = "ClearAllTools"
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
@@ -495,6 +499,7 @@ local function CouchKillFunction(targetPlayerName)
         end
     end
 
+    workspace.FallenPartsDestroyHeight = 0 / 0
     
     local ohString1 = "ClearAllTools"
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
