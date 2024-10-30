@@ -15,6 +15,25 @@ for _, player in pairs(game.Players:GetPlayers()) do
     end
 end
 
+
+--Function to wait for a player's character to spawn
+local function WaitForCharacter(player)
+    while not player.Character or not player.Character:FindFirstChild("Humanoid") do
+        player.CharacterAdded:Wait()
+    end
+end
+
+--Function to wait for a player's humanoid to be alive
+local function WaitForHumanoid(player)
+    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+    while humanoid and humanoid.Health <= 0 do
+        humanoid.Died:Wait()
+    end
+end
+
+
+
+
 --Chat Message Sending Function For The New Chat System
 function Chat(msg)
     local textChatService = game:GetService("TextChatService")
@@ -452,12 +471,12 @@ local function MonitorLocalPlayer()
     local localPlayer = game.Players.LocalPlayer
     while true do
         if not localPlayer.Character then
-         
+          
             localPlayer.CharacterAdded:Wait()
             WaitForCharacter(localPlayer)
             RestartScript() 
         else
-           
+            
             local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
             if humanoid then
                 humanoid.Died:Connect(RestartScript)
@@ -468,4 +487,10 @@ local function MonitorLocalPlayer()
 end
 
 
-MonitorLocalPlayer()
+if FindController() then
+    MonitorLocalPlayer()
+else
+    game.Players.PlayerAdded:Wait()
+    FindController() 
+    MonitorLocalPlayer()
+end
