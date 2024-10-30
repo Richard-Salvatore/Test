@@ -413,6 +413,14 @@ local function ResetFunction()
 end
 
 
+
+--Message Command 
+local function MessageFunction(message)
+    Chat(message)
+end
+
+
+
 --List Of Commands
 getgenv().SalvatoreCommands = {
     busbring = BusBringFunction,
@@ -421,6 +429,7 @@ getgenv().SalvatoreCommands = {
     buskill = BusKillFunction,
     bring = BringFunction,
     reset = ResetFunction,
+    msg = MessageFunction,
 }
 
 
@@ -440,8 +449,10 @@ function Command(player, msg)
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or "buskill" then
+            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
+            elseif commandName == "msg" then
+                getgenv().SalvatoreCommands[commandName](targetPlayerName) 
             else
                 getgenv().SalvatoreCommands[commandName]() 
             end
