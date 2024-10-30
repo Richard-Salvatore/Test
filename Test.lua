@@ -7,12 +7,15 @@ getgenv().SalvatoreBot = {
 local config = getgenv().SalvatoreBot
 local controller  
 
---Identify The Controller At The Start
-for _, player in pairs(game.Players:GetPlayers()) do
-    if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
-        controller = player
-        break
+--Identify the controller at the start
+local function FindController()
+    for _, player in pairs(game.Players:GetPlayers()) do
+        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
+            controller = player
+            return true
+        end
     end
+    return false
 end
 
 
