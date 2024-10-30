@@ -446,7 +446,7 @@ function Command(player, msg)
                 getgenv().SalvatoreCommands[commandName]() 
             end
         else
-            Chat("The Salvatore bot could not identify this command.")
+           Chat("The Salvatore bot could not identify the command.")
         end
     end
 end
