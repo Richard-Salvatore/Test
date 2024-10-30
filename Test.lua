@@ -588,6 +588,15 @@ local function MessageFunction(message)
 end
 
 
+local function DateFunction()
+    local currentDate = os.date("*t") 
+    local dateMessage = string.format("Today's date is %04d-%02d-%02d, %02d:%02d:%02d", 
+        currentDate.year, currentDate.month, currentDate.day,
+        currentDate.hour, currentDate.min, currentDate.sec)
+    Chat(dateMessage)
+end
+
+
 
 --List Of Commands
 getgenv().SalvatoreCommands = {
@@ -599,6 +608,7 @@ getgenv().SalvatoreCommands = {
     couchkill = CouchKillFunction,
     bring = BringFunction,
     reset = ResetFunction,
+    date = DateFunction,
     msg = MessageFunction,
 }
 
