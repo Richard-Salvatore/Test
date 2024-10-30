@@ -349,7 +349,7 @@ local function BusKillFunction(targetPlayerName)
         end
 
         
-        localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
+        localPlayerCar:SetPrimaryPartCFrame(CFrame.new(3473.4292, -216.103912, -574.905212))
         if controller and controller.Character then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
