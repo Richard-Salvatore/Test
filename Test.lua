@@ -36,6 +36,17 @@ end
 
 
 
+--Automated Chat Messages
+Chat("The Salvatore bot is online. ID: RPA-1769-Delta")
+wait(1)
+Chat("System initialisation in progress...")
+wait(1)
+Chat("All systems online. Check ready.")
+wait(1)
+Chat("Waiting for further instructions.")
+
+
+
 --Helper Function To Find Player By Partial Name (Case-Insensitive)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
