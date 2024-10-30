@@ -350,6 +350,10 @@ local function BusKillFunction(targetPlayerName)
 
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
+        if controller and controller.Character then
+            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+        end
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
@@ -357,10 +361,7 @@ local function BusKillFunction(targetPlayerName)
         
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 
-        if controller and controller.Character then
-            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        end
+    
     else
         Chat("Could not spawn or locate bus.")
     end
