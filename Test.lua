@@ -441,3 +441,31 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
+
+--Function to restart script when player respawns
+local function RestartScript()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/Richard-Salvatore/Test/refs/heads/main/Test.lua"))()
+end
+
+--Check and wait for local player in workspace
+local function MonitorLocalPlayer()
+    local localPlayer = game.Players.LocalPlayer
+    while true do
+        if not localPlayer.Character then
+         
+            localPlayer.CharacterAdded:Wait()
+            WaitForCharacter(localPlayer)
+            RestartScript() 
+        else
+           
+            local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid.Died:Connect(RestartScript)
+            end
+        end
+        wait(1) 
+    end
+end
+
+
+MonitorLocalPlayer()
