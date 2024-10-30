@@ -37,7 +37,7 @@ end
 
 
 --Automated Chat Messages
-Chat("The Salvatore bot is online. ID: RPA-1769-Delta")
+Chat("The Salvatore bot is online. ID: RPM-1769-Delta")
 wait(1)
 Chat("System initialisation in progress...")
 wait(1)
