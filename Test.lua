@@ -305,7 +305,7 @@ local function BusKillFunction(targetPlayerName)
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
-   
+  
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
     wait(1)
@@ -316,7 +316,6 @@ local function BusKillFunction(targetPlayerName)
         local targetSeat = localPlayerCar.Body.VehicleSeat
         local localHumanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
-       
         if targetSeat and localHumanoid then
             local offset = CFrame.new(0, 4, 0)
             local targetCFrame = targetSeat.CFrame * offset
@@ -329,7 +328,7 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
-        
+       
         targetHumanoidForBusKill = targetPlayerForBusKill.Character and targetPlayerForBusKill.Character:FindFirstChildOfClass("Humanoid")
         if targetHumanoidForBusKill then
             local success, error = pcall(function()
@@ -348,24 +347,29 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
+        localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
         
-        localPlayerCar:SetPrimaryPartCFrame(CFrame.new(3473.4292, -216.103912, -574.905212))
-        if controller and controller.Character then
+        
+        local controller = game.Players:FindFirstChild("ControllerName") 
+        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+        else
+            Chat("Controller not available for teleport.")
         end
+        
+        
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
         }
-        
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
-
     
     else
         Chat("Could not spawn or locate bus.")
     end
 end
+
 
 
 
