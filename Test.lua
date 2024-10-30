@@ -4,33 +4,20 @@ getgenv().SalvatoreBot = {
     Prefix = "!",
 }
 
+
+
+
 local config = getgenv().SalvatoreBot
 local controller  
 
---Identify the controller at the start
-local function FindController()
-    for _, player in pairs(game.Players:GetPlayers()) do
-        if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
-            controller = player
-            return true
-        end
-    end
-    return false
-end
 
 
---Function to wait for a player's character to spawn
-local function WaitForCharacter(player)
-    while not player.Character or not player.Character:FindFirstChild("Humanoid") do
-        player.CharacterAdded:Wait()
-    end
-end
 
---Function to wait for a player's humanoid to be alive
-local function WaitForHumanoid(player)
-    local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
-    while humanoid and humanoid.Health <= 0 do
-        humanoid.Died:Wait()
+--Identify The Controller At The Start
+for _, player in pairs(game.Players:GetPlayers()) do
+    if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
+        controller = player
+        break
     end
 end
 
@@ -47,6 +34,8 @@ function Chat(msg)
     end
 end
 
+
+
 --Helper Function To Find Player By Partial Name (Case-Insensitive)
 local function FindPlayerByName(partialName)
     local lowerPartialName = string.lower(partialName)
@@ -58,12 +47,14 @@ local function FindPlayerByName(partialName)
     return nil
 end
 
--- Bus Bring Command
+
+
+--Bus Bring Command
 local function BusBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
 
     if not targetPlayer then
-        Chat("The specified player was not found.")
+        Chat("The Salvatore bot could not identify the selected target.")
         return
     end
 
@@ -72,12 +63,12 @@ local function BusBringFunction(targetPlayerName)
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoid then
-        Chat("The target player's character is not available.")
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
     if targetHumanoid.Sit then
-        Chat("The target is currently sitting; bring cannot be used.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the busbring cannot be executed.")
         return
     end
 
@@ -102,7 +93,6 @@ local function BusBringFunction(targetPlayerName)
             end
         end
     else
-        Chat("Could not spawn bus.")
         return
     end
 
@@ -118,7 +108,7 @@ local function BusBringFunction(targetPlayerName)
         end
     end)
     if not success then
-        Chat("Error while bringing the target.")
+        Chat("The Salvatore bot detected an error while bringing the selected target.")
         return
     end
 
@@ -135,12 +125,14 @@ local function BusBringFunction(targetPlayerName)
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
 end
 
+
+
 --Cart Bring Command
 local function CartBringFunction(targetPlayerName)
     local targetPlayer = FindPlayerByName(targetPlayerName)
 
     if not targetPlayer then
-        Chat("The specified player was not found.")
+        Chat("The Salvatore bot could not identify the selected target.")
         return
     end
 
@@ -149,12 +141,12 @@ local function CartBringFunction(targetPlayerName)
     local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoidForCartBring then
-        Chat("The target player's character is not available.")
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
     if targetHumanoidForCartBring.Sit then
-        Chat("The target is currently sitting; bring cannot be used.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the cartbring cannot be executed.")
         return
     end
 
@@ -196,7 +188,7 @@ local function CartBringFunction(targetPlayerName)
         end
     end)
     if not success then
-        Chat("Error while bringing the target.")
+        Chat("The Salvatore bot detected an error while bringing the selected target.")
         return
     end
 
@@ -217,12 +209,14 @@ local function CartBringFunction(targetPlayerName)
 end
 
 
+
+
 --Couch Bring Command
 local function CouchBringFunction(targetPlayerName)
     local targetPlayerForCouchBring = FindPlayerByName(targetPlayerName)
 
     if not targetPlayerForCouchBring then
-        Chat("The specified player was not found.")
+        Chat("The Salvatore bot could not identify the selected target.")
         return
     end
 
@@ -231,12 +225,12 @@ local function CouchBringFunction(targetPlayerName)
     local targetHumanoidForCouchBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoidForCouchBring then
-        Chat("The target player's character is not available.")
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
     if targetHumanoidForCouchBring.Sit then
-        Chat("The target is currently sitting; bring cannot be used.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the couchbring cannot be executed.")
         return
     end
 
@@ -280,7 +274,7 @@ local function CouchBringFunction(targetPlayerName)
         end
     end)
     if not success then
-        Chat("Error while bringing the target.")
+        Chat("The Salvatore bot detected an error while bringing the selected target.")
         return
     end
 
@@ -300,12 +294,16 @@ local function CouchBringFunction(targetPlayerName)
     end
 end
 
+
+
+
+
 --Bus Kill Command
 local function BusKillFunction(targetPlayerName)
     local targetPlayerForBusKill = FindPlayerByName(targetPlayerName)
 
     if not targetPlayerForBusKill then
-        Chat("The specified player was not found.")
+        Chat("The Salvatore bot could not identify the selected target.")
         return
     end
 
@@ -314,12 +312,12 @@ local function BusKillFunction(targetPlayerName)
     local targetHumanoidForBusKill = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoidForBusKill then
-        Chat("The target player's character is not available.")
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
     if targetHumanoidForBusKill.Sit then
-        Chat("The target is currently sitting; buskill cannot be used.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the buskill cannot be executed.")
         return
     end
 
@@ -327,7 +325,7 @@ local function BusKillFunction(targetPlayerName)
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
-  
+   
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
     wait(1)
@@ -338,6 +336,7 @@ local function BusKillFunction(targetPlayerName)
         local targetSeat = localPlayerCar.Body.VehicleSeat
         local localHumanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
+       
         if targetSeat and localHumanoid then
             local offset = CFrame.new(0, 4, 0)
             local targetCFrame = targetSeat.CFrame * offset
@@ -350,7 +349,7 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
-       
+        
         targetHumanoidForBusKill = targetPlayerForBusKill.Character and targetPlayerForBusKill.Character:FindFirstChildOfClass("Humanoid")
         if targetHumanoidForBusKill then
             local success, error = pcall(function()
@@ -364,31 +363,26 @@ local function BusKillFunction(targetPlayerName)
                 end
             end)
             if not success then
-                Chat("Error while attempting to position bus.")
+                Chat("The Salvatore bot detected an error while killing the selected target.")
                 return
             end
         end
 
+        
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
-        
-        
-        local controller = game.Players:FindFirstChild("ControllerName") 
-        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
+        if controller and controller.Character then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        else
-            Chat("Controller not available for teleport.")
         end
-        
-        
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
         }
+        
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+
     
     else
-        Chat("Could not spawn or locate bus.")
     end
 end
 
@@ -404,9 +398,10 @@ local function BringFunction()
         local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
         character:SetPrimaryPartCFrame(targetPosition)
     else
-        Chat("Controller not found.")
+        return
     end
 end
+
 
 
 
@@ -418,6 +413,7 @@ getgenv().SalvatoreCommands = {
     buskill = BusKillFunction,
     bring = BringFunction,
 }
+
 
 
 
@@ -441,10 +437,14 @@ function Command(player, msg)
                 getgenv().SalvatoreCommands[commandName]() 
             end
         else
-            Chat("Unknown command.")
+            Chat("The Salvatore bot could not identify this command.")
         end
     end
 end
+
+
+
+
 
 --Monitor Incoming Messages
 game:GetService("TextChatService").OnIncomingMessage = function(message)
@@ -456,6 +456,9 @@ game:GetService("TextChatService").OnIncomingMessage = function(message)
     end
 end
 
+
+
+
 --Anti-Idle Protection
 local VirtualUser = game:GetService("VirtualUser")
 game:GetService("Players").LocalPlayer.Idled:connect(function()
@@ -463,37 +466,3 @@ game:GetService("Players").LocalPlayer.Idled:connect(function()
     wait(1)
     VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 end)
-
---Function to restart script when player respawns
-local function RestartScript()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/Richard-Salvatore/Test/refs/heads/main/Test.lua"))()
-end
-
---Check and wait for local player in workspace
-local function MonitorLocalPlayer()
-    local localPlayer = game.Players.LocalPlayer
-    while true do
-        if not localPlayer.Character then
-          
-            localPlayer.CharacterAdded:Wait()
-            WaitForCharacter(localPlayer)
-            RestartScript() 
-        else
-            
-            local humanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid.Died:Connect(RestartScript)
-            end
-        end
-        wait(1) 
-    end
-end
-
-
-if FindController() then
-    MonitorLocalPlayer()
-else
-    game.Players.PlayerAdded:Wait()
-    FindController() 
-    MonitorLocalPlayer()
-end
