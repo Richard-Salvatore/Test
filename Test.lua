@@ -35,18 +35,6 @@ function Chat(msg)
 end
 
 
---Fling Command
-local function FlingFunction(targetPlayerName)
-    local targetPlayer = FindPlayerByName(targetPlayerName)
-
-    if not targetPlayer then
-        Chat("The Salvatore bot could not identify the selected target.")
-        return
-    end
-    SalvatoreFling(targetPlayer)
-end
-
-
 
 --Helper Function To Find Player By Partial Name (Case-Insensitive)
 local function FindPlayerByName(partialName)
@@ -588,76 +576,6 @@ local function BringFunction()
 end
 
 
---Fling Command
-local Targets = {""} 
-local Players = game:GetService("Players")
-local Player = Players.LocalPlayer
-local AllBool = false
-
-local GetPlayer = function(Name)
-    Name = Name:lower()
-    if Name == "all" or Name == "others" then
-        AllBool = true
-        return
-    elseif Name == "random" then
-        local GetPlayers = Players:GetPlayers()
-        if table.find(GetPlayers,Player) then table.remove(GetPlayers,table.find(GetPlayers,Player)) end
-        return GetPlayers[math.random(#GetPlayers)]
-    elseif Name ~= "random" and Name ~= "all" and Name ~= "others" then
-        for _,x in next, Players:GetPlayers() do
-            if x ~= Player then
-                if x.Name:lower():match("^"..Name) then
-                    return x;
-                elseif x.DisplayName:lower():match("^"..Name) then
-                    return x;
-                end
-            end
-        end
-    else
-        return
-    end
-end
-
-local SalvatoreFling = function(TargetPlayer)
-    local Character = Player.Character
-    local Humanoid = Character and Character:FindFirstChildOfClass("Humanoid")
-    local RootPart = Humanoid and Humanoid.RootPart
-
-    local TCharacter = TargetPlayer.Character
-    local THumanoid
-    local TRootPart
-    local THead
-    local Accessory
-    local Handle
-
-    if TCharacter:FindFirstChildOfClass("Humanoid") then
-        THumanoid = TCharacter:FindFirstChildOfClass("Humanoid")
-    end
-    if THumanoid and THumanoid.RootPart then
-        TRootPart = THumanoid.RootPart
-    end
-    if TCharacter:FindFirstChild("Head") then
-        THead = TCharacter:FindFirstChild("Head")
-    end
-    if TCharacter:FindFirstChild("Accessories") then
-        Accessory = TCharacter:FindFirstChild("Accessories")
-    end
-    if Accessory and Accessory:FindFirstChild("Handle") then
-        Handle = Accessory.Handle
-    end
-
-    if RootPart and TRootPart then
-        for i = 1,10 do
-            wait(0.1)
-            TRootPart.CFrame = RootPart.CFrame * CFrame.new(0,5,0)
-        end
-      
-    else
-        Chat("Could not identify target for fling.")
-    end
-end
-
-
 --Reset Command
 local function ResetFunction()
     local localPlayer = game.Players.LocalPlayer
@@ -684,7 +602,6 @@ getgenv().SalvatoreCommands = {
     buskill = BusKillFunction,
     cartkill = CartKillFunction,
     couchkill = CouchKillFunction,
-    fling = FlingFunction,
     bring = BringFunction,
     reset = ResetFunction,
     msg = MessageFunction,
@@ -708,8 +625,6 @@ function Command(player, msg)
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
             if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" or "couchkill" then
-                getgenv().SalvatoreCommands[commandName](targetPlayerName)
-            elseif commandName == "fling" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             elseif commandName == "msg" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName) 
