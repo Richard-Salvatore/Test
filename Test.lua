@@ -403,6 +403,14 @@ local function BringFunction()
 end
 
 
+--Reset Command
+local function ResetFunction()
+    local localPlayer = game.Players.LocalPlayer
+    local humanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+    if humanoid then
+        humanoid.Health = 0
+    end
+end
 
 
 --List Of Commands
@@ -412,6 +420,7 @@ getgenv().SalvatoreCommands = {
     couchbring = CouchBringFunction,
     buskill = BusKillFunction,
     bring = BringFunction,
+    reset = ResetFunction,
 }
 
 
