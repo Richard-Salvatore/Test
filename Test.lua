@@ -372,10 +372,18 @@ local function BusKillFunction(targetPlayerName)
 
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
-        if controller and controller.Character then
+         
+        wait(1)
+
+        local controller = game.Players:FindFirstChild("ControllerName")  
+        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+            localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+        else
+            Chat("Controller not found.")
         end
+     end
+  end
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
@@ -460,15 +468,17 @@ local function CartKillFunction(targetPlayerName)
         
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212, -0.994122028, -0.00251204451, -0.108236156, -7.31211669e-09, 0.999730766, -0.0232026074, 0.108265303, -0.0230662227, -0.993854403)
         
+        wait(1)
+
         local controller = game.Players:FindFirstChild("ControllerName")  
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
         else
+            Chat("Controller not found.")
         end
     end
 end
-
 
 --Couch Kill Command
 local function CouchKillFunction(targetPlayerName)
