@@ -323,22 +323,18 @@ local function BusKillFunction(targetPlayerName)
 
     workspace.FallenPartsDestroyHeight = 0 / 0
     
-    
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
-   
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
     wait(1)
 
-    
     local localPlayerCar = workspace.Vehicles[localPlayer.Name .. "Car"]
     if localPlayerCar then
         local targetSeat = localPlayerCar.Body.VehicleSeat
         local localHumanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
-       
         if targetSeat and localHumanoid then
             local offset = CFrame.new(0, 4, 0)
             local targetCFrame = targetSeat.CFrame * offset
@@ -351,7 +347,6 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
-        
         targetHumanoidForBusKill = targetPlayerForBusKill.Character and targetPlayerForBusKill.Character:FindFirstChildOfClass("Humanoid")
         if targetHumanoidForBusKill then
             local success, error = pcall(function()
@@ -364,6 +359,7 @@ local function BusKillFunction(targetPlayerName)
                     wait()
                 end
             end)
+
             if not success then
                 Chat("The Salvatore bot detected an error while killing the selected target.")
                 return
@@ -372,27 +368,27 @@ local function BusKillFunction(targetPlayerName)
 
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
-         
+
         wait(1)
 
+        
         local controller = game.Players:FindFirstChild("ControllerName")  
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
         else
             Chat("Controller not found.")
         end
-     end
-  end
+
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
         }
         
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
-    else
     end
 end
+
 
 
 
@@ -420,7 +416,6 @@ local function CartKillFunction(targetPlayerName)
 
     workspace.FallenPartsDestroyHeight = 0 / 0
     
-    
     local ohString1 = "ClearAllTools"
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
     wait(1)
@@ -431,7 +426,6 @@ local function CartKillFunction(targetPlayerName)
     localCharacter.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
     localCharacter.Humanoid.Sit = true
 
-    
     local ohString1 = "PickingTools"
     local ohString2 = "ShoppingCart"
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer(ohString1, ohString2)
@@ -442,7 +436,6 @@ local function CartKillFunction(targetPlayerName)
         end
     end
 
-    
     if targetHumanoidForCartKill then
         local newPositionIndex = 1
         local positions = {
@@ -451,6 +444,7 @@ local function CartKillFunction(targetPlayerName)
             CFrame.new(0, 0, -15),
             CFrame.new(0, 0, 2)
         }
+        
         local success, error = pcall(function()
             while not targetHumanoidForCartKill.Sit and targetHumanoidForCartKill.Health > 0 do
                 local targetCFrame = targetHumanoidForCartKill.RootPart.CFrame
@@ -465,11 +459,12 @@ local function CartKillFunction(targetPlayerName)
             Chat("The Salvatore bot detected an error while killing the selected target.")
             return
         end
-        
-        localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212, -0.994122028, -0.00251204451, -0.108236156, -7.31211669e-09, 0.999730766, -0.0232026074, 0.108265303, -0.0230662227, -0.993854403)
-        
+
+      
+        localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
 
+        
         local controller = game.Players:FindFirstChild("ControllerName")  
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
@@ -502,7 +497,6 @@ local function CouchKillFunction(targetPlayerName)
         return
     end
 
-    
     for _, descendant in ipairs(targetCharacter:GetDescendants()) do
         if descendant:IsA("MeshPart") or descendant:IsA("Part") then
             descendant.CanCollide = false
@@ -521,20 +515,17 @@ local function CouchKillFunction(targetPlayerName)
     localCharacter.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
     localCharacter.Humanoid.Sit = true
 
-    
     local ohString1 = "PickingTools"
     local ohString2 = "Couch"
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer(ohString1, ohString2)
     wait()
 
-    
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localCharacter
         end
     end
 
-    
     if targetHumanoidForCouchKill then
         local newPositionIndex = 1
         local positions = {
@@ -554,15 +545,16 @@ local function CouchKillFunction(targetPlayerName)
             end
         end)
         
-       if not success then
+        if not success then
             Chat("The Salvatore bot detected an error while killing the selected target.")
             return
         end
 
-        
+       
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
 
+       
         local controller = game.Players:FindFirstChild("ControllerName")  
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
@@ -572,6 +564,7 @@ local function CouchKillFunction(targetPlayerName)
         end
     end
 end
+
 
 
 
