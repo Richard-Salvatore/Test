@@ -370,22 +370,19 @@ local function BusKillFunction(targetPlayerName)
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
 
         wait(1)
-
+        local args = {
+            [1] = "DeleteAllVehicles"
+        }
         
-        
-        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
+        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+        wait(1)
+         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
         else
             Chat("Controller not found.")
         end
 
-        wait(1)
-        local args = {
-            [1] = "DeleteAllVehicles"
-        }
-        
-        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
     end
 end
 
@@ -465,6 +462,9 @@ local function CartKillFunction(targetPlayerName)
         wait(1)
 
         
+       local ohString1 = "ClearAllTools"
+        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
+        wait(1)
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
@@ -553,7 +553,9 @@ local function CouchKillFunction(targetPlayerName)
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
 
-       
+        local ohString1 = "ClearAllTools"
+        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
+        wait(1)
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
