@@ -321,8 +321,6 @@ local function BusKillFunction(targetPlayerName)
         return
     end
 
-    workspace.FallenPartsDestroyHeight = 0 / 0
-    
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
@@ -359,7 +357,6 @@ local function BusKillFunction(targetPlayerName)
                     wait()
                 end
             end)
-
             if not success then
                 Chat("The Salvatore bot detected an error while killing the selected target.")
                 return
@@ -369,22 +366,21 @@ local function BusKillFunction(targetPlayerName)
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
 
+        
+        local startingPosition = humanoidRootPart.CFrame
+
+        
+        humanoidRootPart.CFrame = startingPosition
+        
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
         }
-        
-        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
-        wait(1)
-         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
-            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        else
-            Chat("Controller not found.")
-        end
 
+        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
     end
 end
+
 
 
 
@@ -392,7 +388,7 @@ end
 --Cart Kill Command
 local function CartKillFunction(targetPlayerName)
     local targetPlayerForCartKill = FindPlayerByName(targetPlayerName)
-    
+
     if not targetPlayerForCartKill then
         Chat("The Salvatore bot could not identify the selected target.")
         return
@@ -457,27 +453,33 @@ local function CartKillFunction(targetPlayerName)
             return
         end
 
-      
+        
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
 
         
-       local ohString1 = "ClearAllTools"
+        local startingPosition = localCharacter.HumanoidRootPart.CFrame
+        
+        
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
+
+        wait(1)
+
+        local ohString1 = "ClearAllTools"
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
         wait(1)
-        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
-            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        else
-            Chat("Controller not found.")
-        end
     end
 end
+
+
+
+
+
 
 --Couch Kill Command
 local function CouchKillFunction(targetPlayerName)
     local targetPlayerForCouchKill = FindPlayerByName(targetPlayerName)
-    
+
     if not targetPlayerForCouchKill then
         Chat("The Salvatore bot could not identify the selected target.")
         return
@@ -549,21 +551,24 @@ local function CouchKillFunction(targetPlayerName)
             return
         end
 
-       
+        
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
+        wait(1)
+
+        
+        local startingPosition = localCharacter.HumanoidRootPart.CFrame
+
+        
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
+
         wait(1)
 
         local ohString1 = "ClearAllTools"
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
         wait(1)
-        if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
-            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        else
-            Chat("Controller not found.")
-        end
     end
 end
+
 
 
 
