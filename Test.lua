@@ -309,16 +309,6 @@ local function BusKillFunction(targetPlayerName)
     end
 
     local localPlayer = game.Players.LocalPlayer
-    local localCharacter = localPlayer.Character
-    workspace.FallenPartsDestroyHeight = 0 / 0
-
-    
-    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
-        Chat("The Salvatore bot could not identify the local player's character.")
-        return
-    end
-
-    local startingPosition = localCharacter.HumanoidRootPart.CFrame
     local targetCharacter = targetPlayerForBusKill.Character
     local targetHumanoidForBusKill = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
@@ -332,24 +322,39 @@ local function BusKillFunction(targetPlayerName)
         return
     end
 
+    local localPlayer = game.Players.LocalPlayer
+    local localCharacter = localPlayer.Character
+
+   
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
     
-    local humanoidRootPart = localCharacter.HumanoidRootPart
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
+    workspace.FallenPartsDestroyHeight = 0 / 0
+    
+    
+    local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
+   
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
     wait(1)
 
+    
     local localPlayerCar = workspace.Vehicles[localPlayer.Name .. "Car"]
     if localPlayerCar then
         local targetSeat = localPlayerCar.Body.VehicleSeat
-        local localHumanoid = localCharacter:FindFirstChildOfClass("Humanoid")
+        local localHumanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
+       
         if targetSeat and localHumanoid then
             local offset = CFrame.new(0, 4, 0)
             local targetCFrame = targetSeat.CFrame * offset
             while not localHumanoid.Sit do
-                localCharacter:SetPrimaryPartCFrame(targetCFrame)
+                localPlayer.Character:SetPrimaryPartCFrame(targetCFrame)
                 game:GetService("RunService").Heartbeat:Wait()
                 if not localHumanoid or localHumanoid.Health <= 0 then
                     break
@@ -357,6 +362,7 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
+        
         targetHumanoidForBusKill = targetPlayerForBusKill.Character and targetPlayerForBusKill.Character:FindFirstChildOfClass("Humanoid")
         if targetHumanoidForBusKill then
             local success, error = pcall(function()
@@ -377,20 +383,19 @@ local function BusKillFunction(targetPlayerName)
 
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
-
+        if controller and controller.Character then
+            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+        end
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
         }
-
+        
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
-        wait(1)
-
-       
+        wait(2)
         localCharacter.HumanoidRootPart.CFrame = startingPosition
-
     else
-        Chat("The Salvatore bot could not identify the player's car.")
     end
 end
 
