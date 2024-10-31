@@ -1,6 +1,6 @@
 --Configuration
 getgenv().SalvatoreBot = {
-    Controllers = { "7472556141", "SalvatoreLogBotV3" }, 
+    Controllers = { "4424701978", "Kls7xx" }, 
     Prefix = "!",
 }
 
