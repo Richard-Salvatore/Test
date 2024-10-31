@@ -310,6 +310,7 @@ local function BusKillFunction(targetPlayerName)
 
     local localPlayer = game.Players.LocalPlayer
     local localCharacter = localPlayer.Character
+    workspace.FallenPartsDestroyHeight = 0 / 0
 
     
     if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
@@ -421,6 +422,7 @@ local function CartKillFunction(targetPlayerName)
 
     local localPlayer = game.Players.LocalPlayer
     local localCharacter = localPlayer.Character
+    workspace.FallenPartsDestroyHeight = 0 / 0
 
     
     if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
