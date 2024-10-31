@@ -576,6 +576,24 @@ local function BringFunction()
 end
 
 
+
+--Alt Account Check Command
+local function IsAltAccountFunction(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
+    if not targetPlayer then
+        Chat("The Salvatore bot could not identify the selected target.")
+        return
+    end
+
+    if targetPlayer.AccountAge < 20 then
+        Chat("The Salvatore bot has identified the target as an alt account.")
+    else
+        Chat("The Salvatore bot has identified the target as not an alt account.")
+    end
+end
+
+
+
 --Reset Command
 local function ResetFunction()
     local localPlayer = game.Players.LocalPlayer
@@ -602,6 +620,7 @@ getgenv().SalvatoreCommands = {
     buskill = BusKillFunction,
     cartkill = CartKillFunction,
     couchkill = CouchKillFunction,
+    isaltacc = IsAltAccountFunction,
     bring = BringFunction,
     reset = ResetFunction,
     msg = MessageFunction,
@@ -624,7 +643,7 @@ function Command(player, msg)
 
     if table.find(config.Controllers, tostring(player.UserId)) or table.find(config.Controllers, player.Name) then
         if getgenv().SalvatoreCommands[commandName] then
-            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" or "couchkill" then
+            if commandName == "busbring" or commandName == "cartbring" or commandName == "couchbring" or commandName == "buskill" or "cartkill" or "couchkill" or "isaltacc" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName)
             elseif commandName == "msg" then
                 getgenv().SalvatoreCommands[commandName](targetPlayerName) 
