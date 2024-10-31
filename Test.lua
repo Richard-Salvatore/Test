@@ -15,7 +15,7 @@ local controller
 
 --Identify The Controller At The Start
 for _, player in pairs(game.Players:GetPlayers()) do
-    if player.UserId == 7472556141 or player.Name == "SalvatoreLogBotV3" then
+    if player.UserId == 4424701978 or player.Name == "Kls7xx" then
         controller = player
         break
     end
