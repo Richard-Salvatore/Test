@@ -479,9 +479,9 @@ local function CartKillFunction(targetPlayerName)
         
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
-        localCharacter.HumanoidRootPart.CFrame = startingPosition
-        wait(1)
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
+        wait(1)
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
         
     end
 end
@@ -576,9 +576,9 @@ local function CouchKillFunction(targetPlayerName)
        
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
-        localCharacter.HumanoidRootPart.CFrame = startingPosition
+        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
         wait(1)
-        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
     end
 end
 
