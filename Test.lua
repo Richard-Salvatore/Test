@@ -320,7 +320,8 @@ local function BusKillFunction(targetPlayerName)
         Chat("The Salvatore bot has detected that the selected target is sitting; the buskill cannot be executed.")
         return
     end
-
+    
+    local startingPosition = humanoidRootPart.CFrame
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
@@ -365,11 +366,6 @@ local function BusKillFunction(targetPlayerName)
 
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
-
-        
-        local startingPosition = humanoidRootPart.CFrame
-
-        
         humanoidRootPart.CFrame = startingPosition
         
         wait(1)
@@ -407,6 +403,8 @@ local function CartKillFunction(targetPlayerName)
         return
     end
 
+    
+    local startingPosition = humanoidRootPart.CFrame
     workspace.FallenPartsDestroyHeight = 0 / 0
     
     local ohString1 = "ClearAllTools"
@@ -456,11 +454,6 @@ local function CartKillFunction(targetPlayerName)
         
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
-
-        
-        local startingPosition = localCharacter.HumanoidRootPart.CFrame
-        
-        
         localCharacter.HumanoidRootPart.CFrame = startingPosition
 
         wait(1)
@@ -503,7 +496,8 @@ local function CouchKillFunction(targetPlayerName)
             descendant.CanCollide = false
         end
     end
-
+    
+    local startingPosition = humanoidRootPart.CFrame
     workspace.FallenPartsDestroyHeight = 0 / 0
     
     local ohString1 = "ClearAllTools"
@@ -554,11 +548,6 @@ local function CouchKillFunction(targetPlayerName)
         
         localCharacter.HumanoidRootPart.CFrame = CFrame.new(4473.4292, -316.103912, -474.905212)
         wait(1)
-
-        
-        local startingPosition = localCharacter.HumanoidRootPart.CFrame
-
-        
         localCharacter.HumanoidRootPart.CFrame = startingPosition
 
         wait(1)
