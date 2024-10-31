@@ -306,7 +306,8 @@ local function BusKillFunction(targetPlayerName)
         Chat("The Salvatore bot could not identify the selected target.")
         return
     end
-
+    
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayerForBusKill.Character
     local targetHumanoidForBusKill = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
@@ -320,20 +321,23 @@ local function BusKillFunction(targetPlayerName)
         Chat("The Salvatore bot has detected that the selected target is sitting; the buskill cannot be executed.")
         return
     end
+
     
-    local startingPosition = humanoidRootPart.CFrame
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
+   
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
     wait(1)
 
+    
     local localPlayerCar = workspace.Vehicles[localPlayer.Name .. "Car"]
     if localPlayerCar then
         local targetSeat = localPlayerCar.Body.VehicleSeat
         local localHumanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
+       
         if targetSeat and localHumanoid then
             local offset = CFrame.new(0, 4, 0)
             local targetCFrame = targetSeat.CFrame * offset
@@ -346,6 +350,7 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
+        
         targetHumanoidForBusKill = targetPlayerForBusKill.Character and targetPlayerForBusKill.Character:FindFirstChildOfClass("Humanoid")
         if targetHumanoidForBusKill then
             local success, error = pcall(function()
@@ -366,16 +371,22 @@ local function BusKillFunction(targetPlayerName)
 
         
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
-        humanoidRootPart.CFrame = startingPosition
-        
+      
         wait(1)
         local args = {
             [1] = "DeleteAllVehicles"
         }
-
+        
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+        wait(1)
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
+
+        
+    else
     end
 end
+
+
 
 
 
