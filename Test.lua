@@ -372,7 +372,7 @@ local function BusKillFunction(targetPlayerName)
         wait(1)
 
         
-        local controller = game.Players:FindFirstChild("ControllerName")  
+        
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
@@ -465,10 +465,9 @@ local function CartKillFunction(targetPlayerName)
         wait(1)
 
         
-        local controller = game.Players:FindFirstChild("ControllerName")  
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
         else
             Chat("Controller not found.")
         end
@@ -555,10 +554,9 @@ local function CouchKillFunction(targetPlayerName)
         wait(1)
 
        
-        local controller = game.Players:FindFirstChild("ControllerName")  
         if controller and controller.Character and controller.Character:FindFirstChild("HumanoidRootPart") then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-            localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
         else
             Chat("Controller not found.")
         end
