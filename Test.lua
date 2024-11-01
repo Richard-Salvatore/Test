@@ -707,55 +707,27 @@ local function To2Function(targetPlayerName)
         return
     end
 
-    local oldPos = localPlayer.Character.HumanoidRootPart.CFrame
-
     
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
     wait(1)
 
+   
     if not game.Players.LocalPlayer.Character then return end
     local plr = game.Players.LocalPlayer.Character
     plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
     plr.Humanoid.Sit = true
 
-    
+   
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
 
+    
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localPlayer.Character 
         end
     end
 
-    
-    local success, error = pcall(function()
-        local newPositionIndex = 1 
-        local positions = {
-            CFrame.new(0, 0, -20),
-            CFrame.new(0, 0, 3),
-            CFrame.new(0, 0, -15),
-            CFrame.new(0, 0, 2)
-        }
-        while not targetHumanoidForCartBring.Sit and targetPlayer.Character and targetHumanoidForCartBring.Health > 0 do
-            local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
-            local newPosition = positions[newPositionIndex]
-            newPositionIndex = newPositionIndex % #positions + 1 
-            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
-            game:GetService("RunService").Heartbeat:Wait()  
-        end
-    end)
-
-    if not success then
-        Chat("The Salvatore bot detected an error while bringing the selected target.")
-        return
-    end
-
-   
-    while not targetHumanoidForCartBring.Sit do
-        wait(0.5)
-    end
-
-    
+  
     if controller and controller.Character then
         local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
         local controllerPositions = {
@@ -764,6 +736,8 @@ local function To2Function(targetPlayerName)
             CFrame.new(0, -3, 3)
         }
         local positionIndex = 1
+        
+        
         while not controllerHumanoid.Sit do
             local controllerCFrame = controller.Character.HumanoidRootPart.CFrame
             local offset = controllerPositions[positionIndex]
@@ -772,13 +746,16 @@ local function To2Function(targetPlayerName)
             wait(0.5)
         end
 
-        
         wait(2)
+        local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) 
+
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
         plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
         plr.Humanoid.Sit = false
     end
 end
+
 
 
 
@@ -808,7 +785,7 @@ local function To3Function(targetPlayerName)
 
     
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-    wait()
+    wait(1)
 
     
     if localPlayer.Character then
@@ -819,40 +796,13 @@ local function To3Function(targetPlayerName)
 
     
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
-    wait()
+    wait(1)
 
     
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localPlayer.Character 
         end
-    end
-
-    
-    local newPositionIndex = 1 
-    local positions = {
-        CFrame.new(1, -3, -20),
-        CFrame.new(1, -3, 2),
-        CFrame.new(1, -3, -15),
-        CFrame.new(1, -3, 3)
-    }
-    local success, error = pcall(function()
-        while not targetHumanoidForCouchBring.Sit and targetPlayerForCouchBring.Character and targetHumanoidForCouchBring.Health > 0 do
-            local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
-            local newPosition = positions[newPositionIndex]
-            newPositionIndex = (newPositionIndex % #positions) + 1 
-            localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
-            game:GetService("RunService").Heartbeat:Wait()  
-        end
-    end)
-    if not success then
-        Chat("The Salvatore bot detected an error while bringing the selected target.")
-        return
-    end
-
-    
-    while not targetHumanoidForCouchBring.Sit do
-        wait(0.5)
     end
 
     
@@ -864,6 +814,8 @@ local function To3Function(targetPlayerName)
             CFrame.new(1, -3, 3)
         }
         local positionIndex = 1
+        
+       
         while not controllerHumanoid.Sit do
             local controllerCFrame = controller.Character.HumanoidRootPart.CFrame
             local offset = controllerPositions[positionIndex]
@@ -872,13 +824,18 @@ local function To3Function(targetPlayerName)
             wait(0.5)
         end
 
-        
+     
         wait(2)
+        local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) 
+
+       
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
         localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
         localPlayer.Character.Humanoid.Sit = false
     end
 end
+
 
 
 
