@@ -592,6 +592,87 @@ end
 
 
 
+--To Command
+local function ToFunction(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
+
+    if not targetPlayer then
+        Chat("The Salvatore bot could not identify the selected target.")
+        return
+    end
+
+    local localPlayer = game.Players.LocalPlayer
+    local targetCharacter = targetPlayer.Character
+    local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+    if not targetCharacter or not targetHumanoid then
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
+        return
+    end
+
+    if targetHumanoid.Sit then
+        Chat("The Salvatore bot has detected that the selected target is sitting; the bus bring cannot be executed.")
+        return
+    end
+
+    
+    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
+    wait(1)
+    
+    
+    game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
+    wait(1)
+
+    
+    local playerCar = workspace.Vehicles[localPlayer.Name .. "Car"]
+    if not playerCar then
+        return
+    end
+
+    
+    local seat = playerCar.Body.VehicleSeat
+    if seat then
+        local attempts = 0
+        while not localPlayer.Character.Humanoid.Sit and attempts < 10 do
+            localPlayer.Character.HumanoidRootPart.CFrame = seat.CFrame
+            wait(0.5)
+            attempts = attempts + 1
+        end
+    else
+        return
+    end
+
+    
+    local success, error = pcall(function()
+        if controller and controller.Character then
+            local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
+            while not controllerHumanoid.Sit do
+                playerCar:SetPrimaryPartCFrame(controller.Character.HumanoidRootPart.CFrame)
+                wait(0.5)
+            end
+        end
+    end)
+
+    if not success then
+        Chat("The Salvatore bot detected an error while bringing the selected target.")
+        return
+    end
+
+    
+    if targetHumanoid then
+        local targetCFrame = targetHumanoid.RootPart.CFrame
+        playerCar:SetPrimaryPartCFrame(targetCFrame)
+    end
+
+    
+    wait(1)
+    local args = {
+        [1] = "DeleteAllVehicles"
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+end
+
+
 
 
 --Bring Command
@@ -656,6 +737,7 @@ getgenv().SalvatoreCommands = {
     bring = BringFunction,
     reset = ResetFunction,
     msg = MessageFunction,
+    to = ToFunction,
 }
 
 
