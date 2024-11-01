@@ -644,6 +644,7 @@ local function ToFunction(targetPlayerName)
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    local localCharacter = localPlayer.Character
     workspace.FallenPartsDestroyHeight = 0 / 0
 
     
@@ -747,6 +748,7 @@ local function To2Function(targetPlayerName)
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    local localCharacter = localPlayer.Character
     workspace.FallenPartsDestroyHeight = 0 / 0
 
     
@@ -822,13 +824,8 @@ local function To3Function(targetPlayerName)
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    local localCharacter = localPlayer.Character
     workspace.FallenPartsDestroyHeight = 0 / 0
-
-    
-    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
-        Chat("The Salvatore bot could not identify the local player's character.")
-        return
-    end
 
     local startingPosition = localCharacter.HumanoidRootPart.CFrame
 
