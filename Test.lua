@@ -707,13 +707,8 @@ local function To2Function(targetPlayerName)
         return
     end
 
-    -- Teleport to a predefined position
-    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
-    wait(1)
-
     -- Pick the Shopping Cart
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
-    wait(1)
 
     -- Move tools to the character
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
@@ -740,13 +735,12 @@ local function To2Function(targetPlayerName)
             wait(0.5)
         end
 
-        -- Final teleport to the target player's position
+        
         local targetCFrame = targetHumanoid.RootPart.CFrame
         localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) -- Adjust offset as necessary
     end
 
     wait(1)
-    -- Clear tools after teleporting
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
 
@@ -778,22 +772,18 @@ local function To3Function(targetPlayerName)
         return
     end
 
-    -- Teleport to a predefined position
-    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
-    wait(1)
-
-    -- Pick the Couch tool
+    
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
     wait(1)
 
-    -- Move tools to the character
+  
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localPlayer.Character 
         end
     end
 
-    -- Teleport to controller position with offsets
+    
     if controller and controller.Character then
         local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
         local controllerPositions = {
@@ -811,13 +801,12 @@ local function To3Function(targetPlayerName)
             wait(0.5)
         end
 
-        -- Final teleport to the target player's position
+        
         local targetCFrame = targetHumanoid.RootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) -- Adjust offset as necessary
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) 
     end
 
     wait(1)
-    -- Clear tools after teleporting
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
 
