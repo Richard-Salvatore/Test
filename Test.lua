@@ -142,6 +142,18 @@ local function CartBringFunction(targetPlayerName)
     
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
+    local localPlayer = game.Players.LocalPlayer
+    local localCharacter = localPlayer.Character
+    workspace.FallenPartsDestroyHeight = 0 / 0
+
+    
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
+
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
+    
     local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoidForCartBring then
@@ -154,7 +166,7 @@ local function CartBringFunction(targetPlayerName)
         return
     end
 
-    local oldPos = localPlayer.Character.HumanoidRootPart.CFrame
+   
 
     
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
