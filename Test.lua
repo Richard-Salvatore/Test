@@ -533,7 +533,9 @@ local function CouchKillFunction(targetPlayerName)
         Chat("The Salvatore bot could not identify the selected target.")
         return
     end
-
+    
+    local targetCharacter = targetPlayerForCouchKill.Character
+    local targetHumanoidForCouchKill = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
     local localPlayer = game.Players.LocalPlayer
     local localCharacter = localPlayer.Character
     workspace.FallenPartsDestroyHeight = 0 / 0
