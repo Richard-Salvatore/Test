@@ -643,11 +643,17 @@ local function ToFunction(targetPlayerName)
     end
 
     
+    local positions = { CFrame.new(0, -3, -3), CFrame.new(0, 0, -15), CFrame.new(0, -3, -3) }
+    local positionIndex = 1
+
+    
     local success, error = pcall(function()
         if controller and controller.Character then
             local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
             while not controllerHumanoid.Sit do
-                playerCar:SetPrimaryPartCFrame(controller.Character.HumanoidRootPart.CFrame)
+                local controllerPosition = controller.Character.HumanoidRootPart.CFrame * positions[positionIndex]
+                playerCar:SetPrimaryPartCFrame(controllerPosition)
+                positionIndex = (positionIndex % #positions) + 1
                 wait(0.5)
             end
         end
@@ -664,7 +670,7 @@ local function ToFunction(targetPlayerName)
         playerCar:SetPrimaryPartCFrame(targetCFrame)
     end
 
-    
+   
     wait(1)
     local args = {
         [1] = "DeleteAllVehicles"
@@ -701,15 +707,14 @@ local function To2Function(targetPlayerName)
         return
     end
 
-    
     local oldPos = localPlayer.Character.HumanoidRootPart.CFrame
 
     
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
     wait(1)
 
-    if not localPlayer.Character then return end
-    local plr = localPlayer.Character
+    if not game.Players.LocalPlayer.Character then return end
+    local plr = game.Players.LocalPlayer.Character
     plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
     plr.Humanoid.Sit = true
 
@@ -718,18 +723,25 @@ local function To2Function(targetPlayerName)
 
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
-            tool.Parent = plr
+            tool.Parent = localPlayer.Character 
         end
     end
 
     
     local success, error = pcall(function()
-        if controller and controller.Character then
-            local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
-            while not controllerHumanoid.Sit do
-                localPlayer.Character.HumanoidRootPart.CFrame = controller.Character.HumanoidRootPart.CFrame
-                wait(0.5)
-            end
+        local newPositionIndex = 1 
+        local positions = {
+            CFrame.new(0, 0, -20),
+            CFrame.new(0, 0, 3),
+            CFrame.new(0, 0, -15),
+            CFrame.new(0, 0, 2)
+        }
+        while not targetHumanoidForCartBring.Sit and targetPlayer.Character and targetHumanoidForCartBring.Health > 0 do
+            local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
+            local newPosition = positions[newPositionIndex]
+            newPositionIndex = newPositionIndex % #positions + 1 
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
+            game:GetService("RunService").Heartbeat:Wait()  
         end
     end)
 
@@ -738,35 +750,35 @@ local function To2Function(targetPlayerName)
         return
     end
 
+   
+    while not targetHumanoidForCartBring.Sit do
+        wait(0.5)
+    end
+
     
-    if targetHumanoidForCartBring then
-        local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame
-    end
+    if controller and controller.Character then
+        local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
+        local controllerPositions = {
+            CFrame.new(0, -3, -3),
+            CFrame.new(0, 0, -15),
+            CFrame.new(0, -3, 3)
+        }
+        local positionIndex = 1
+        while not controllerHumanoid.Sit do
+            local controllerCFrame = controller.Character.HumanoidRootPart.CFrame
+            local offset = controllerPositions[positionIndex]
+            positionIndex = (positionIndex % #controllerPositions) + 1
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerCFrame * offset
+            wait(0.5)
+        end
 
-    wait(1)
-    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-    plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-    plr.Humanoid.Sit = false
-end
-
-
-
---Alt Account Check Command
-local function IsAltAccountFunction(targetPlayerName)
-    local targetPlayer = FindPlayerByName(targetPlayerName)
-    if not targetPlayer then
-        Chat("The Salvatore bot could not identify the selected target.")
-        return
-    end
-
-    if targetPlayer.AccountAge < 20 then
-        Chat("The Salvatore bot has identified the target as an alt account.")
-    else
-        Chat("The Salvatore bot has identified the target as not an alt account.")
+        
+        wait(2)
+        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+        plr.Humanoid.Sit = false
     end
 end
-
 
 
 
@@ -816,33 +828,75 @@ local function To3Function(targetPlayerName)
         end
     end
 
-   
+    
+    local newPositionIndex = 1 
+    local positions = {
+        CFrame.new(1, -3, -20),
+        CFrame.new(1, -3, 2),
+        CFrame.new(1, -3, -15),
+        CFrame.new(1, -3, 3)
+    }
     local success, error = pcall(function()
-        if controller and controller.Character then
-            local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
-            while not controllerHumanoid.Sit do
-                localPlayer.Character.HumanoidRootPart.CFrame = controller.Character.HumanoidRootPart.CFrame
-                wait(0.5)
-            end
+        while not targetHumanoidForCouchBring.Sit and targetPlayerForCouchBring.Character and targetHumanoidForCouchBring.Health > 0 do
+            local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
+            local newPosition = positions[newPositionIndex]
+            newPositionIndex = (newPositionIndex % #positions) + 1 
+            localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
+            game:GetService("RunService").Heartbeat:Wait()  
         end
     end)
-
     if not success then
         Chat("The Salvatore bot detected an error while bringing the selected target.")
         return
     end
 
     
-    if targetHumanoidForCouchBring then
-        local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame
+    while not targetHumanoidForCouchBring.Sit do
+        wait(0.5)
     end
 
     
-    wait(1)
-    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-    localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-    localPlayer.Character.Humanoid.Sit = false
+    if controller and controller.Character then
+        local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
+        local controllerPositions = {
+            CFrame.new(1, -3, -2),
+            CFrame.new(0, 0, -15),
+            CFrame.new(1, -3, 3)
+        }
+        local positionIndex = 1
+        while not controllerHumanoid.Sit do
+            local controllerCFrame = controller.Character.HumanoidRootPart.CFrame
+            local offset = controllerPositions[positionIndex]
+            positionIndex = (positionIndex % #controllerPositions) + 1
+            localPlayer.Character.HumanoidRootPart.CFrame = controllerCFrame * offset
+            wait(0.5)
+        end
+
+        
+        wait(2)
+        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+        localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+        localPlayer.Character.Humanoid.Sit = false
+    end
+end
+
+
+
+
+
+--Alt Account Check Command
+local function IsAltAccountFunction(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
+    if not targetPlayer then
+        Chat("The Salvatore bot could not identify the selected target.")
+        return
+    end
+
+    if targetPlayer.AccountAge < 20 then
+        Chat("The Salvatore bot has identified the target as an alt account.")
+    else
+        Chat("The Salvatore bot has identified the target as not an alt account.")
+    end
 end
 
 
