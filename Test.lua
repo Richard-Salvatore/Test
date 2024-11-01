@@ -249,52 +249,54 @@ local function CouchBringFunction(targetPlayerName)
 
     local localPlayer = game.Players.LocalPlayer
     local localCharacter = localPlayer.Character
-    workspace.FallenPartsDestroyHeight = 0 / 0
 
-    
+  
     if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
         Chat("The Salvatore bot could not identify the local player's character.")
         return
     end
 
     local startingPosition = localCharacter.HumanoidRootPart.CFrame
-    local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayerForCouchBring.Character
     local targetHumanoidForCouchBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
+   
     if not targetCharacter or not targetHumanoidForCouchBring then
         Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
+   
     if targetHumanoidForCouchBring.Sit then
-        Chat("The Salvatore bot has detected that the selected target is sitting; the couchbring cannot be executed.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the couch bring cannot be executed.")
         return
     end
 
-    
+   
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
     wait()
 
     
-    if localPlayer.Character then
-        local plr = localPlayer.Character
-        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-        plr.Humanoid.Sit = true
-    end
-
-    
-    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
-    wait()
-
-    
-    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
-        if tool:IsA("Tool") then
-            tool.Parent = localPlayer.Character 
+    if localCharacter then
+        local localHumanoid = localCharacter:FindFirstChildOfClass("Humanoid")
+        if localHumanoid then
+            localHumanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+            localHumanoid.Sit = true
         end
     end
 
-    
+ 
+    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
+    wait()
+
+  
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = localCharacter 
+        end
+    end
+
+  
     local newPositionIndex = 1 
     local positions = {
         CFrame.new(1, -3, -20),
@@ -302,38 +304,48 @@ local function CouchBringFunction(targetPlayerName)
         CFrame.new(1, -3, -15),
         CFrame.new(1, -3, 3)
     }
+
     local success, error = pcall(function()
-        while not targetHumanoidForCouchBring.Sit and targetPlayerForCouchBring.Character and targetHumanoidForCouchBring.Health > 0 do
+        while targetHumanoidForCouchBring and not targetHumanoidForCouchBring.Sit and targetPlayerForCouchBring.Character and targetHumanoidForCouchBring.Health > 0 do
             local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
             local newPosition = positions[newPositionIndex]
-            newPositionIndex = newPositionIndex % #positions + 1 
-            localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * newPosition
+            newPositionIndex = (newPositionIndex % #positions) + 1 
+            localCharacter.HumanoidRootPart.CFrame = targetCFrame * newPosition
             game:GetService("RunService").Heartbeat:Wait()  
         end
     end)
+
     if not success then
         Chat("The Salvatore bot detected an error while bringing the selected target.")
         return
     end
 
-    
-    while not targetHumanoidForCouchBring.Sit do
+  
+    while targetHumanoidForCouchBring and not targetHumanoidForCouchBring.Sit do
         wait(0.5)
     end
 
    
     if controller and controller.Character then
-        local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
-        wait(2)
-        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-        plr.Humanoid.Sit = false
-        wait(1)
-        localCharacter.HumanoidRootPart.CFrame = startingPosition
+        local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
+        if controllerHumanoid then
+            local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
+            localCharacter.HumanoidRootPart.CFrame = controllerPrimaryCFrame
+            wait(2)
+            game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+
+            if localHumanoid then
+                localHumanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+                localHumanoid.Sit = false
+            end
+
+            wait(1)
+            localCharacter.HumanoidRootPart.CFrame = startingPosition
+        else
+        end
+    else
     end
 end
-
 
 
 
@@ -361,47 +373,44 @@ local function BusKillFunction(targetPlayerName)
         return
     end
 
-    local localPlayer = game.Players.LocalPlayer
     local localCharacter = localPlayer.Character
     workspace.FallenPartsDestroyHeight = 0 / 0
 
-    
+   
     if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
         Chat("The Salvatore bot could not identify the local player's character.")
         return
     end
 
     local startingPosition = localCharacter.HumanoidRootPart.CFrame
-    
-    
+
+   
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
     humanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
 
-   
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Ca1r"]:FireServer("PickingCar", "SchoolBus")
     wait(1)
 
-    
     local localPlayerCar = workspace.Vehicles[localPlayer.Name .. "Car"]
     if localPlayerCar then
         local targetSeat = localPlayerCar.Body.VehicleSeat
-        local localHumanoid = localPlayer.Character and localPlayer.Character:FindFirstChildOfClass("Humanoid")
+        local localHumanoid = localPlayer.Character:FindFirstChildOfClass("Humanoid")
 
-       
         if targetSeat and localHumanoid then
             local offset = CFrame.new(0, 4, 0)
-            local targetCFrame = targetSeat.CFrame * offset
             while not localHumanoid.Sit do
+                local targetCFrame = targetSeat.CFrame * offset
                 localPlayer.Character:SetPrimaryPartCFrame(targetCFrame)
                 game:GetService("RunService").Heartbeat:Wait()
+                
+              
                 if not localHumanoid or localHumanoid.Health <= 0 then
                     break
                 end
             end
         end
 
-        
         targetHumanoidForBusKill = targetPlayerForBusKill.Character and targetPlayerForBusKill.Character:FindFirstChildOfClass("Humanoid")
         if targetHumanoidForBusKill then
             local success, error = pcall(function()
@@ -420,17 +429,16 @@ local function BusKillFunction(targetPlayerName)
             end
         end
 
-        
+      
         localPlayerCar:SetPrimaryPartCFrame(CFrame.new(4473.4292, -316.103912, -474.905212))
         if controller and controller.Character then
             local controllerPrimaryCFrame = controller.Character.HumanoidRootPart.CFrame
             localPlayer.Character.HumanoidRootPart.CFrame = controllerPrimaryCFrame
         end
         wait(1)
-        local args = {
-            [1] = "DeleteAllVehicles"
-        }
         
+        
+        local args = { [1] = "DeleteAllVehicles" }
         game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
         wait(2)
         localCharacter.HumanoidRootPart.CFrame = startingPosition
