@@ -675,17 +675,79 @@ end
 
 
 
---Bring Command
-local function BringFunction()
-    local localPlayer = game.Players.LocalPlayer
-    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
 
-    if controller and controller.Character then
-        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
-        character:SetPrimaryPartCFrame(targetPosition)
-    else
+
+
+--To2 Command
+local function To2Function(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
+
+    if not targetPlayer then
+        Chat("The Salvatore bot could not identify the selected target.")
         return
     end
+
+    local localPlayer = game.Players.LocalPlayer
+    local targetCharacter = targetPlayer.Character
+    local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+    if not targetCharacter or not targetHumanoidForCartBring then
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
+        return
+    end
+
+    if targetHumanoidForCartBring.Sit then
+        Chat("The Salvatore bot has detected that the selected target is sitting; the cart bring cannot be executed.")
+        return
+    end
+
+    
+    local oldPos = localPlayer.Character.HumanoidRootPart.CFrame
+
+    
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    wait(1)
+
+    if not localPlayer.Character then return end
+    local plr = localPlayer.Character
+    plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+    plr.Humanoid.Sit = true
+
+    
+    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
+
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = plr
+        end
+    end
+
+    
+    local success, error = pcall(function()
+        if controller and controller.Character then
+            local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
+            while not controllerHumanoid.Sit do
+                localPlayer.Character.HumanoidRootPart.CFrame = controller.Character.HumanoidRootPart.CFrame
+                wait(0.5)
+            end
+        end
+    end)
+
+    if not success then
+        Chat("The Salvatore bot detected an error while bringing the selected target.")
+        return
+    end
+
+    
+    if targetHumanoidForCartBring then
+        local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame
+    end
+
+    wait(1)
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+    plr.Humanoid.Sit = false
 end
 
 
@@ -702,6 +764,100 @@ local function IsAltAccountFunction(targetPlayerName)
         Chat("The Salvatore bot has identified the target as an alt account.")
     else
         Chat("The Salvatore bot has identified the target as not an alt account.")
+    end
+end
+
+
+
+
+
+--To3 Command
+local function To3Function(targetPlayerName)
+    local targetPlayerForCouchBring = FindPlayerByName(targetPlayerName)
+
+    if not targetPlayerForCouchBring then
+        Chat("The Salvatore bot could not identify the selected target.")
+        return
+    end
+
+    local localPlayer = game.Players.LocalPlayer
+    local targetCharacter = targetPlayerForCouchBring.Character
+    local targetHumanoidForCouchBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+
+    if not targetCharacter or not targetHumanoidForCouchBring then
+        Chat("The Salvatore bot was not able to identify the character of the selected target.")
+        return
+    end
+
+    if targetHumanoidForCouchBring.Sit then
+        Chat("The Salvatore bot has detected that the selected target is sitting; the couch bring cannot be executed.")
+        return
+    end
+
+    
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    wait()
+
+    
+    if localPlayer.Character then
+        local plr = localPlayer.Character
+        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+        plr.Humanoid.Sit = true
+    end
+
+    
+    game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
+    wait()
+
+    
+    for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
+        if tool:IsA("Tool") then
+            tool.Parent = localPlayer.Character 
+        end
+    end
+
+   
+    local success, error = pcall(function()
+        if controller and controller.Character then
+            local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
+            while not controllerHumanoid.Sit do
+                localPlayer.Character.HumanoidRootPart.CFrame = controller.Character.HumanoidRootPart.CFrame
+                wait(0.5)
+            end
+        end
+    end)
+
+    if not success then
+        Chat("The Salvatore bot detected an error while bringing the selected target.")
+        return
+    end
+
+    
+    if targetHumanoidForCouchBring then
+        local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame
+    end
+
+    
+    wait(1)
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+    localPlayer.Character.Humanoid.Sit = false
+end
+
+
+
+
+--Bring Command
+local function BringFunction()
+    local localPlayer = game.Players.LocalPlayer
+    local character = localPlayer.Character or localPlayer.CharacterAdded:Wait()
+
+    if controller and controller.Character then
+        local targetPosition = controller.Character.HumanoidRootPart.CFrame * CFrame.new(4, 0, 0)
+        character:SetPrimaryPartCFrame(targetPosition)
+    else
+        return
     end
 end
 
@@ -738,6 +894,8 @@ getgenv().SalvatoreCommands = {
     reset = ResetFunction,
     msg = MessageFunction,
     to = ToFunction,
+    to2 = To2Function,
+    to3 = To3Function,
 }
 
 
