@@ -695,39 +695,34 @@ local function To2Function(targetPlayerName)
 
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
-    local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
-    if not targetCharacter or not targetHumanoidForCartBring then
+    if not targetCharacter or not targetHumanoid then
         Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
-    if targetHumanoidForCartBring.Sit then
+    if targetHumanoid.Sit then
         Chat("The Salvatore bot has detected that the selected target is sitting; the cart bring cannot be executed.")
         return
     end
 
-    
-    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    -- Teleport to a predefined position
+    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
     wait(1)
 
-   
-    if not game.Players.LocalPlayer.Character then return end
-    local plr = game.Players.LocalPlayer.Character
-    plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-    plr.Humanoid.Sit = true
-
-   
+    -- Pick the Shopping Cart
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
+    wait(1)
 
-    
+    -- Move tools to the character
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localPlayer.Character 
         end
     end
 
-  
+    -- Teleport to controller position with offsets
     if controller and controller.Character then
         local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
         local controllerPositions = {
@@ -737,24 +732,24 @@ local function To2Function(targetPlayerName)
         }
         local positionIndex = 1
         
-        
         while not controllerHumanoid.Sit do
             local controllerCFrame = controller.Character.HumanoidRootPart.CFrame
             local offset = controllerPositions[positionIndex]
-            positionIndex = (positionIndex % #controllerPositions) + 1
             localPlayer.Character.HumanoidRootPart.CFrame = controllerCFrame * offset
+            positionIndex = (positionIndex % #controllerPositions) + 1
             wait(0.5)
         end
 
-        wait(2)
-        local targetCFrame = targetHumanoidForCartBring.RootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) 
-
-        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-        plr.Humanoid.Sit = false
+        -- Final teleport to the target player's position
+        local targetCFrame = targetHumanoid.RootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) -- Adjust offset as necessary
     end
+
+    wait(1)
+    -- Clear tools after teleporting
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
+
 
 
 
@@ -762,50 +757,43 @@ end
 
 --To3 Command
 local function To3Function(targetPlayerName)
-    local targetPlayerForCouchBring = FindPlayerByName(targetPlayerName)
+    local targetPlayer = FindPlayerByName(targetPlayerName)
 
-    if not targetPlayerForCouchBring then
+    if not targetPlayer then
         Chat("The Salvatore bot could not identify the selected target.")
         return
     end
 
     local localPlayer = game.Players.LocalPlayer
-    local targetCharacter = targetPlayerForCouchBring.Character
-    local targetHumanoidForCouchBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    local targetCharacter = targetPlayer.Character
+    local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
-    if not targetCharacter or not targetHumanoidForCouchBring then
+    if not targetCharacter or not targetHumanoid then
         Chat("The Salvatore bot was not able to identify the character of the selected target.")
         return
     end
 
-    if targetHumanoidForCouchBring.Sit then
+    if targetHumanoid.Sit then
         Chat("The Salvatore bot has detected that the selected target is sitting; the couch bring cannot be executed.")
         return
     end
 
-    
-    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    -- Teleport to a predefined position
+    localPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1054.22009, 2.9980247, -34.663887)
     wait(1)
 
-    
-    if localPlayer.Character then
-        local plr = localPlayer.Character
-        plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-        plr.Humanoid.Sit = true
-    end
-
-    
+    -- Pick the Couch tool
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "Couch")
     wait(1)
 
-    
+    -- Move tools to the character
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localPlayer.Character 
         end
     end
 
-    
+    -- Teleport to controller position with offsets
     if controller and controller.Character then
         local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
         local controllerPositions = {
@@ -815,25 +803,22 @@ local function To3Function(targetPlayerName)
         }
         local positionIndex = 1
         
-       
         while not controllerHumanoid.Sit do
             local controllerCFrame = controller.Character.HumanoidRootPart.CFrame
             local offset = controllerPositions[positionIndex]
-            positionIndex = (positionIndex % #controllerPositions) + 1
             localPlayer.Character.HumanoidRootPart.CFrame = controllerCFrame * offset
+            positionIndex = (positionIndex % #controllerPositions) + 1
             wait(0.5)
         end
 
-     
-        wait(2)
-        local targetCFrame = targetHumanoidForCouchBring.RootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) 
-
-       
-        game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
-        localPlayer.Character.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-        localPlayer.Character.Humanoid.Sit = false
+        -- Final teleport to the target player's position
+        local targetCFrame = targetHumanoid.RootPart.CFrame
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) -- Adjust offset as necessary
     end
+
+    wait(1)
+    -- Clear tools after teleporting
+    game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
 
 
