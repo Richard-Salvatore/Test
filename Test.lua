@@ -123,6 +123,8 @@ local function BusBringFunction(targetPlayerName)
     }
     
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+    wait(1)
+    localCharacter.HumanoidRootPart.CFrame = startingPosition
 end
 
 
@@ -137,6 +139,7 @@ local function CartBringFunction(targetPlayerName)
         return
     end
 
+    
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoidForCartBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
@@ -206,6 +209,8 @@ local function CartBringFunction(targetPlayerName)
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
         plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
         plr.Humanoid.Sit = false
+        wait(1)
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
     end
 end
 
@@ -221,6 +226,17 @@ local function CouchBringFunction(targetPlayerName)
         return
     end
 
+    local localPlayer = game.Players.LocalPlayer
+    local localCharacter = localPlayer.Character
+    workspace.FallenPartsDestroyHeight = 0 / 0
+
+    
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
+
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayerForCouchBring.Character
     local targetHumanoidForCouchBring = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
@@ -292,6 +308,8 @@ local function CouchBringFunction(targetPlayerName)
         game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
         plr.Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
         plr.Humanoid.Sit = false
+        wait(1)
+        localCharacter.HumanoidRootPart.CFrame = startingPosition
     end
 end
 
@@ -324,15 +342,15 @@ local function BusKillFunction(targetPlayerName)
 
     local localPlayer = game.Players.LocalPlayer
     local localCharacter = localPlayer.Character
+    workspace.FallenPartsDestroyHeight = 0 / 0
 
-   
+    
     if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
         Chat("The Salvatore bot could not identify the local player's character.")
         return
     end
-    
+
     local startingPosition = localCharacter.HumanoidRootPart.CFrame
-    workspace.FallenPartsDestroyHeight = 0 / 0
     
     
     local humanoidRootPart = localPlayer.Character.HumanoidRootPart
@@ -436,7 +454,7 @@ local function CartKillFunction(targetPlayerName)
     end
 
     local startingPosition = localCharacter.HumanoidRootPart.CFrame
-    workspace.FallenPartsDestroyHeight = 0 / 0
+
 
     local ohString1 = "ClearAllTools"
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer(ohString1)
@@ -504,7 +522,17 @@ local function CouchKillFunction(targetPlayerName)
         return
     end
 
-    local targetCharacter = targetPlayerForCouchKill.Character
+    local localPlayer = game.Players.LocalPlayer
+    local localCharacter = localPlayer.Character
+    workspace.FallenPartsDestroyHeight = 0 / 0
+
+    
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
+
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
     local targetHumanoidForCouchKill = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
 
     if not targetCharacter or not targetHumanoidForCouchKill then
@@ -604,6 +632,15 @@ local function ToFunction(targetPlayerName)
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    workspace.FallenPartsDestroyHeight = 0 / 0
+
+    
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
+
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
 
     if not targetCharacter or not targetHumanoid then
         Chat("The Salvatore bot was not able to identify the character of the selected target.")
@@ -611,7 +648,7 @@ local function ToFunction(targetPlayerName)
     end
 
     if targetHumanoid.Sit then
-        Chat("The Salvatore bot has detected that the selected target is sitting; the bus bring cannot be executed.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the teleport cannot be executed.")
         return
     end
 
@@ -660,7 +697,7 @@ local function ToFunction(targetPlayerName)
     end)
 
     if not success then
-        Chat("The Salvatore bot detected an error while bringing the selected target.")
+        Chat("The Salvatore bot detected an error while teleporting to the selected target.")
         return
     end
 
@@ -676,6 +713,8 @@ local function ToFunction(targetPlayerName)
         [1] = "DeleteAllVehicles"
     }
     game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Ca1r"):FireServer(unpack(args))
+    wait(1)
+    localCharacter.HumanoidRootPart.CFrame = startingPosition
 end
 
 
@@ -696,6 +735,15 @@ local function To2Function(targetPlayerName)
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    workspace.FallenPartsDestroyHeight = 0 / 0
+
+    
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
+
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
 
     if not targetCharacter or not targetHumanoid then
         Chat("The Salvatore bot was not able to identify the character of the selected target.")
@@ -703,21 +751,21 @@ local function To2Function(targetPlayerName)
     end
 
     if targetHumanoid.Sit then
-        Chat("The Salvatore bot has detected that the selected target is sitting; the cart bring cannot be executed.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the teleport cannot be executed.")
         return
     end
 
-    -- Pick the Shopping Cart
+    
     game:GetService("ReplicatedStorage").RE["1Too1l"]:InvokeServer("PickingTools", "ShoppingCart")
 
-    -- Move tools to the character
+    
     for _, tool in ipairs(localPlayer.Backpack:GetChildren()) do
         if tool:IsA("Tool") then
             tool.Parent = localPlayer.Character 
         end
     end
 
-    -- Teleport to controller position with offsets
+    
     if controller and controller.Character then
         local controllerHumanoid = controller.Character:FindFirstChildOfClass("Humanoid")
         local controllerPositions = {
@@ -737,11 +785,12 @@ local function To2Function(targetPlayerName)
 
         
         local targetCFrame = targetHumanoid.RootPart.CFrame
-        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) -- Adjust offset as necessary
+        localPlayer.Character.HumanoidRootPart.CFrame = targetCFrame * CFrame.new(0, 0, -5) 
     end
 
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    localCharacter.HumanoidRootPart.CFrame = startingPosition
 end
 
 
@@ -761,6 +810,15 @@ local function To3Function(targetPlayerName)
     local localPlayer = game.Players.LocalPlayer
     local targetCharacter = targetPlayer.Character
     local targetHumanoid = targetCharacter and targetCharacter:FindFirstChildOfClass("Humanoid")
+    workspace.FallenPartsDestroyHeight = 0 / 0
+
+    
+    if not localCharacter or not localCharacter:FindFirstChild("HumanoidRootPart") then
+        Chat("The Salvatore bot could not identify the local player's character.")
+        return
+    end
+
+    local startingPosition = localCharacter.HumanoidRootPart.CFrame
 
     if not targetCharacter or not targetHumanoid then
         Chat("The Salvatore bot was not able to identify the character of the selected target.")
@@ -768,7 +826,7 @@ local function To3Function(targetPlayerName)
     end
 
     if targetHumanoid.Sit then
-        Chat("The Salvatore bot has detected that the selected target is sitting; the couch bring cannot be executed.")
+        Chat("The Salvatore bot has detected that the selected target is sitting; the teleport cannot be executed.")
         return
     end
 
@@ -808,6 +866,7 @@ local function To3Function(targetPlayerName)
 
     wait(1)
     game:GetService("ReplicatedStorage").RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
+    localCharacter.HumanoidRootPart.CFrame = startingPosition
 end
 
 
